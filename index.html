@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
@@ -387,9 +387,16 @@
                         break;
                     case 2:
                         modalJudulElm.innerHTML = "CV. Catur Bhakti Mandiri";
-                        modalTglElm.innerHTML = "Oktober 2023 - Now";
+                        modalTglElm.innerHTML = "Oktober 2023 - Juni 2025";
                         modalIsiElm.innerHTML =
                             "Saya bekerja full time di perusahaan CV. Catur Bhakti Mandiri. Selama bekerja di sana, saya telah mengembangkan dua situs e-commerce besar, yaitu untuk brand Lunarea dan Ilena. Dalam pengembangan proyek ini, saya menggunakan framework CodeIgniter dan mengintegrasikan sistem pembayaran melalui Midtrans.";
+                        break;
+                    case 3:
+                        modalJudulElm.innerHTML =
+                            "PT. Nusapala Berkah Autonomous";
+                        modalTglElm.innerHTML = "Juni 2025 - Now";
+                        modalIsiElm.innerHTML =
+                            "Saya saat ini bekerja di PT. Nusapala Berkah Autonomous sebagai Full Stack Developer. Dalam peran ini, saya dipercaya untuk menangani proyek terbesar perusahaan, yaitu Asta Parking yang dibangun menggunakan Laravel. Selama mengerjakan proyek tersebut, saya berhasil menambahkan berbagai fitur baru serta melakukan perbaikan bug sesuai kebutuhan dan permintaan klien perusahaan, sehingga mendukung peningkatan kualitas dan kinerja sistem secara keseluruhan.";
                         break;
                     default:
                         break;
@@ -409,7 +416,7 @@
                     type="button"
                     class="item-nav fw-bold"
                     style="color: var(--merah); text-decoration: none"
-                    href="https://drive.google.com/file/d/1mRQjHty8kRb-ASfN5KOkV7WuCY7kU0Mc/view?usp=sharing"
+                    href="https://drive.google.com/file/d/13mQNFtt9NJRdv2CTCn6DBWOPPirc8WWV/view?usp=sharing"
                     target="_blank"
                     >My Resume</a
                 >
@@ -550,19 +557,18 @@
                             style="font-size: 1vw; color: black; width: 70vw"
                             class="mb-1"
                         >
-                            Saya adalah lulusan Sarjana Institut Teknologi
-                            Sepuluh Nopember pada tahun 2023 dengan spesialisasi
-                            sebagai full stack developer. Memiliki pengalaman
-                            profesional selama 1 tahun sebagai full stack
-                            developer, ditambah pengalaman magang selama 1
-                            semester. Selama karier saya, saya telah
-                            berkontribusi dalam pembuatan dua situs web
-                            e-commerce untuk brand Lunarea Furniture dan Ilena
-                            Furniture, di mana saya terlibat dalam pengembangan
-                            end-to-end yang meliputi front-end dan back-end.
-                            Saya siap membawa keahlian teknis dan kreativitas
-                            saya untuk memberikan solusi terbaik pada proyek
-                            berikutnya!
+                            Saya lulusan Institut Teknologi Sepuluh Nopember
+                            tahun 2023 dengan spesialisasi sebagai Full Stack
+                            Developer. Memiliki pengalaman profesional selama 3
+                            tahun. Saya telah mengerjakan berbagai proyek
+                            pengembangan aplikasi, termasuk membangun platform
+                            e-commerce perusahaan dari nol. Saat ini, saya
+                            bekerja di sebuah perusahaan autonomous di Jakarta,
+                            di mana saya terus mengasah kemampuan dalam
+                            merancang, mengembangkan, dan mengoptimalkan solusi
+                            teknologi end-to-end. Saya siap membawa keahlian
+                            teknis dan kreativitas saya untuk memberikan solusi
+                            terbaik pada proyek berikutnya!
                         </p>
                     </div>
                 </div>
@@ -821,11 +827,14 @@
                             class="m-0"
                         >
                             <ul class="m-0" style="text-wrap: nowrap">
-                                <li class="m-0">Rest API</li>
                                 <li class="m-0">Midtrans integration</li>
-                                <li class="m-0">RajaOnkir integration</li>
                                 <li class="m-0">WordPress</li>
-                                <li class="m-0">JSON Web Token</li>
+                                <li class="m-0">
+                                    Pembuatan dan penerapan WebSocket
+                                </li>
+                                <li class="m-0">
+                                    Bekerja individu maupun dalam tim
+                                </li>
                             </ul>
                         </div>
                     </div>
@@ -855,7 +864,7 @@
                     <p
                         class="myex1"
                         style="
-                            font-family: 'Comforter', cursive;
+                            font-family: &quot;Comforter&quot;, cursive;
                             font-size: 6vw;
                             margin: 0;
                             position: absolute;
@@ -919,7 +928,7 @@
                     }
 
                     .container-item-experience {
-                        transform: translateX(-300px) translateY(45svh);
+                        transform: translateX(-500px) translateY(45svh);
                     }
                     @media (max-width: 1160px) {
                         .container-item-experience {
@@ -974,6 +983,21 @@
                         <div class="item-experience" onclick="openModal(2)">
                             <h3 class="m-0" style="font-weight: 600">
                                 CV. Catur Bhakti Mandiri
+                            </h3>
+                            <div
+                                class="d-flex align-items-center justify-content-between"
+                            >
+                                <div class="status">FULL TIME</div>
+                                <i
+                                    class="material-icons"
+                                    style="height: fit-content"
+                                    >chevron_right</i
+                                >
+                            </div>
+                        </div>
+                        <div class="item-experience" onclick="openModal(3)">
+                            <h3 class="m-0" style="font-weight: 600">
+                                PT. Nusapala Berkah Autonomous
                             </h3>
                             <div
                                 class="d-flex align-items-center justify-content-between"
@@ -1079,25 +1103,23 @@
                         class="d-flex gap-2 container-projects"
                         style="width: 85vw; position: relative; z-index: 4"
                     >
-                        <input
-                            type="radio"
-                            name="project"
-                            id="project_omong"
-                            checked
-                        />
+                        <input type="radio" name="project" id="project2" />
                         <label
-                            for="project_omong"
-                            style="background-image: url('img/omong.jpg')"
+                            for="project2"
+                            style="
+                                background-image: url(&quot;img/lunarea.jpg&quot;);
+                            "
                             class="item-project"
                         >
                             <h1 class="show" style="writing-mode: vertical-lr">
-                                OMONG
+                                LUNAREA
                             </h1>
                             <div class="hide">
-                                <h1 class="mb-2">OMONG<br />Chat App</h1>
-                                <p>NextJs | MongoDB | Tailwind</p>
+                                <h1 class="mb-2">LUNAREA<br />Furniture</h1>
+                                <p>Codeigniter | Bootstrap | Midtrans</p>
                                 <a
-                                    href="https://omong.galihsuks.com/"
+                                    target="_blank"
+                                    href="https://lunareafurniture.com/"
                                     class="btn-lonjong"
                                     ><p class="m-0">Lihat Projek</p>
                                     <i class="material-icons d-block m-0"
@@ -1109,7 +1131,9 @@
                         <input type="radio" name="project" id="project1" />
                         <label
                             for="project1"
-                            style="background-image: url('img/ilena.jpg')"
+                            style="
+                                background-image: url(&quot;img/ilena.jpg&quot;);
+                            "
                             class="item-project"
                         >
                             <h1 class="show" style="writing-mode: vertical-lr">
@@ -1119,6 +1143,7 @@
                                 <h1 class="mb-2">ILENA<br />Furniture</h1>
                                 <p>Codeigniter | Bootstrap | Midtrans</p>
                                 <a
+                                    target="_blank"
                                     href="https://ilenafurniture.com/"
                                     class="btn-lonjong"
                                     ><p class="m-0">Lihat Projek</p>
@@ -1128,20 +1153,28 @@
                                 >
                             </div>
                         </label>
-                        <input type="radio" name="project" id="project2" />
+                        <input
+                            type="radio"
+                            name="project"
+                            id="project_omong"
+                            checked
+                        />
                         <label
-                            for="project2"
-                            style="background-image: url('img/lunarea.jpg')"
+                            for="project_omong"
+                            style="
+                                background-image: url(&quot;img/omong.jpg&quot;);
+                            "
                             class="item-project"
                         >
                             <h1 class="show" style="writing-mode: vertical-lr">
-                                LUNAREA
+                                OMONG
                             </h1>
                             <div class="hide">
-                                <h1 class="mb-2">LUNAREA<br />Furniture</h1>
-                                <p>Codeigniter | Bootstrap | Midtrans</p>
+                                <h1 class="mb-2">OMONG<br />Chat App</h1>
+                                <p>NextJs | MongoDB | Tailwind</p>
                                 <a
-                                    href="https://lunareafurniture.com/"
+                                    target="_blank"
+                                    href="https://omong.galihsuks.com/"
                                     class="btn-lonjong"
                                     ><p class="m-0">Lihat Projek</p>
                                     <i class="material-icons d-block m-0"
@@ -1153,7 +1186,9 @@
                         <input type="radio" name="project" id="project3" />
                         <label
                             for="project3"
-                            style="background-image: url('img/TA.jpeg')"
+                            style="
+                                background-image: url(&quot;img/TA.jpeg&quot;);
+                            "
                             class="item-project"
                         >
                             <h1 class="show" style="writing-mode: vertical-lr">
@@ -1164,7 +1199,12 @@
                                 <p>ReactJs | Firebase</p>
                                 <a
                                     class="btn-lonjong"
-                                    onclick="showAlert('Akun login:<br>email:galih@gmail.com<br>pass:12345678', 'https://tugasakhir-ku.web.app/')"
+                                    onclick="
+                                        showAlert(
+                                            'Akun login:<br>email:galih@gmail.com<br>pass:12345678',
+                                            'https://tugasakhir-ku.web.app/',
+                                        )
+                                    "
                                     ><p class="m-0">Lihat Projek</p>
                                     <i class="material-icons d-block m-0"
                                         >arrow_forward</i
@@ -1175,7 +1215,9 @@
                         <input type="radio" name="project" id="project4" />
                         <label
                             for="project4"
-                            style="background-image: url('img/oceria.jpg')"
+                            style="
+                                background-image: url(&quot;img/oceria.jpg&quot;);
+                            "
                             class="item-project"
                         >
                             <h1 class="show" style="writing-mode: vertical-lr">
@@ -1187,6 +1229,7 @@
                                 </h1>
                                 <p>PHP | MySQL</p>
                                 <a
+                                    target="_blank"
                                     href="https://oceria.amagabar.com/"
                                     class="btn-lonjong"
                                     ><p class="m-0">Lihat Projek</p>
@@ -1199,7 +1242,9 @@
                         <input type="radio" name="project" id="project5" />
                         <label
                             for="project5"
-                            style="background-image: url('img/riset.jpg')"
+                            style="
+                                background-image: url(&quot;img/riset.jpg&quot;);
+                            "
                             class="item-project"
                         >
                             <h1 class="show" style="writing-mode: vertical-lr">
@@ -1211,6 +1256,7 @@
                                 </h1>
                                 <p>PHP | MySQL</p>
                                 <a
+                                    target="_blank"
                                     href="https://riset.amagabar.com/"
                                     class="btn-lonjong"
                                     ><p class="m-0">Lihat Projek</p>
@@ -1223,7 +1269,9 @@
                         <input type="radio" name="project" id="project9" />
                         <label
                             for="project9"
-                            style="background-image: url('img/backend.jpg')"
+                            style="
+                                background-image: url(&quot;img/backend.jpg&quot;);
+                            "
                             class="item-project"
                         >
                             <h1 class="show" style="writing-mode: vertical-lr">
@@ -1235,6 +1283,7 @@
                                 </h1>
                                 <p>Javascript | ExpressJs | Firebase</p>
                                 <a
+                                    target="_blank"
                                     href="https://github.com/bangkit-team/IOH-chat-app/tree/main/CloudComputing/backend"
                                     class="btn-lonjong"
                                     ><p class="m-0">Lihat Projek</p>
@@ -1371,12 +1420,14 @@
                     <h3 class="mb-4">Mari diskusi dengan saya</h3>
                     <p class="m-0">Email</p>
                     <a
+                        target="_blank"
                         style="text-decoration: none; color: black"
                         href="mailto:galih8.4.2001@gmail.com"
                         ><p class="fw-bold">galih8.4.2001@gmail.com</p></a
                     >
                     <p class="m-0">No. HP</p>
                     <a
+                        target="_blank"
                         style="text-decoration: none; color: black"
                         href="https://api.whatsapp.com/send/?phone=081905266517&text=Halo%2C+Galih%21+Kami+ingin+mengajak+Anda+untuk+bekerja+bersama+kami&type=phone_number&app_absent=0"
                     >
@@ -1390,7 +1441,7 @@
                             background-color: rgb(150, 150, 150);
                         "
                     ></div>
-                    <p class="m-0">©2024. All Right Reserved</p>
+                    <p class="m-0">©2026. All Right Reserved</p>
                     <p class="m-0">Designed by <b>Galih Sukmamukti</b></p>
                 </div>
             </div>
@@ -1433,7 +1484,7 @@
             itemNavElm.forEach((itemNav, indItem) => {
                 itemNav.addEventListener("click", (e) => {
                     let position = Math.floor(
-                        scrollableElm.scrollLeft / scrollableElm.clientWidth
+                        scrollableElm.scrollLeft / scrollableElm.clientWidth,
                     );
                     let direction = indItem - position;
                     const scrollAmount = scrollableElm.clientWidth * direction;
