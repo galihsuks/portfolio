@@ -1,0 +1,52 @@
+{
+    "hero": {
+        "greet": "Hai!",
+        "cta_cv": "Lihat CV Saya",
+        "cta_hire": "Kontak Saya!",
+        "description": "Saya lulusan Institut Teknologi Sepuluh Nopember dengan spesialisasi sebagai Full Stack Developer. Memiliki pengalaman profesional selama 3 tahun. Saya telah mengerjakan berbagai proyek pengembangan aplikasi, termasuk membangun platform e-commerce perusahaan dari nol. Saat ini, saya bekerja di sebuah perusahaan autonomous di Jakarta, di mana saya terus mengasah kemampuan dalam merancang, mengembangkan, dan mengoptimalkan solusi teknologi end-to-end. Saya siap membawa keahlian teknis dan kreativitas saya untuk memberikan solusi terbaik pada proyek berikutnya!"
+    },
+    "ability": {
+        "title": "Apa yang bisa saya lakukan?",
+        "subtitle": "Saya dapat bekerja sebagai frontend atau backend developer menggunakan tools berikut —"
+    },
+    "navbar": {
+        "list": [
+            { "name": "Siapa Aku", "href": "/" },
+            { "name": "Kemampuan", "href": "#agents" },
+            { "name": "Pengalaman", "href": "#use-cases" },
+            { "name": "Proyek", "href": "#pricing" },
+            { "name": "Kontak", "href": "#docs" }
+        ],
+        "cta_cv": "My Resume"
+    },
+    "workflow": {
+        "title": "Pengalaman Berharga Saya",
+        "description": "Saya seorang full stack developer dari Klaten, Jawa Tengah dengan pengalaman di berbagai perusahaan",
+        "list": [
+            {
+                "title": "Indosat Ooredoo Hutchison",
+                "badge": "Magang",
+                "date": "18 April 2022 - 22 Juni 2022",
+                "description": "Puncak dari program Bangkit adalah kesempatan magang berharga yang saya jalani di perusahaan Indosat Ooredoo Hutchison. Selama masa magang ini, saya aktif terlibat dalam tim yang bertanggung jawab atas pengembangan sebuah chat aplications. Kolaborasi dengan rekan-rekan tim memungkinkan saya untuk berkontribusi dalam berbagai aspek pengembangan. Dalam konteks ini, peran saya terutama berfokus pada pengembangan bagian API dan manajemen Cloud Storage menggunakan Google Cloud Platform.",
+                "link": "https://ioh.co.id/portal/id/iohindex",
+                "image": "https://asset.kompas.com/crops/HrxgpCZqgjizsyvSTwfljhoslRM=/0x0:1000x667/1200x800/data/photo/2024/04/30/6630ecd34ca86.jpg"
+            },
+            {
+                "title": "CV. Catur Bhakti Mandiri",
+                "badge": "Penuh Waktu",
+                "date": "Oktober 2023 - Juni 2025",
+                "description": "Saya bekerja full time di perusahaan CV. Catur Bhakti Mandiri. Selama bekerja di sana, saya telah mengembangkan dua situs e-commerce besar, yaitu untuk brand Lunarea dan Ilena. Dalam pengembangan proyek ini, saya menggunakan framework CodeIgniter dan mengintegrasikan sistem pembayaran melalui Midtrans.",
+                "link": "https://caturbhaktimandiri.com",
+                "image": "/img/cbm.png"
+            },
+            {
+                "title": "PT. Nusapala Berkah Autonomous",
+                "badge": "Penuh Waktu",
+                "date": "Juni 2025 - Sekarang",
+                "description": "Saya saat ini bekerja di PT. Nusapala Berkah Autonomous sebagai Full Stack Developer. Dalam peran ini, saya dipercaya untuk menangani proyek terbesar perusahaan, yaitu Asta Parking yang dibangun menggunakan Laravel. Selama mengerjakan proyek tersebut, saya berhasil menambahkan berbagai fitur baru serta melakukan perbaikan bug sesuai kebutuhan dan permintaan klien perusahaan, sehingga mendukung peningkatan kualitas dan kinerja sistem secara keseluruhan.",
+                "link": "https://nusapalaberkahautonomous.com",
+                "image": "https://nusapalagroup.com/wp-content/uploads/2021/06/VIEW-11-1000x1000-1.jpg"
+            }
+        ]
+    }
+}

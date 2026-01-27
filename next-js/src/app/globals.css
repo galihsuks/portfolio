@@ -1,0 +1,36 @@
+@import "tailwindcss";
+
+@theme {
+    --font-sans: "Poppins", sans-serif;
+}
+
+body {
+    @apply bg-black text-white text-sm antialiased;
+}
+
+.font-hand {
+    font-family: var(--font-hand);
+}
+
+@layer components {
+    .glass {
+        @apply bg-white/10 border border-white/20;
+    }
+    .glass-light {
+        @apply bg-white/70 border border-white/100;
+    }
+
+    .btn {
+        @apply cursor-pointer rounded-full px-8 py-2.5 font-medium text-white transition hover:opacity-90 active:scale-98;
+    }
+}
+
+.container-logo .item-logo img {
+    /* width: 3vw;
+    aspect-ratio: 1 / 1;
+    object-fit: contain;
+    transition: 0.2s;
+    scale: 1; */
+    /* filter: saturate(0); */
+    /* background-color: red; */
+}

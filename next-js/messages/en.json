@@ -1,0 +1,52 @@
+{
+    "hero": {
+        "greet": "I'm",
+        "cta_cv": "View My Resume",
+        "cta_hire": "Hire Me!",
+        "description": "I graduated from the Sepuluh Nopember Institute of Technology, specializing in Full Stack Developer. I have three years of professional experience. I have worked on various application development projects, including building an enterprise e-commerce platform from scratch. I currently work at an autonomous company in Jakarta, where I continue to hone my skills in designing, developing, and optimizing end-to-end technology solutions. I am ready to bring my technical expertise and creativity to deliver the best solution for your next project!"
+    },
+    "ability": {
+        "title": "What can I do?",
+        "subtitle": "I can work as a frontend or backend developer using the following tools —"
+    },
+    "navbar": {
+        "list": [
+            { "name": "Who Am I", "href": "/" },
+            { "name": "Ability", "href": "#agents" },
+            { "name": "Experience", "href": "#use-cases" },
+            { "name": "Projects", "href": "#pricing" },
+            { "name": "Contact Me", "href": "#docs" }
+        ],
+        "cta_cv": "My Resume"
+    },
+    "workflow": {
+        "title": "My Experiences",
+        "description": "I am a full stack developer from Klaten, Jawa Tengah with 3 years of experience in multiple companies",
+        "list": [
+            {
+                "title": "Indosat Ooredoo Hutchison",
+                "badge": "Internship",
+                "date": "April 18, 2022 - June 22, 2022",
+                "description": "The highlight of the Bangkit program was a valuable internship opportunity I undertook at Indosat Ooredoo Hutchison. During this internship, I was actively involved in the team responsible for developing a chat application. Collaborating with my teammates allowed me to contribute to various aspects of the development. Within this context, my role primarily focused on API development and Cloud Storage management using the Google Cloud Platform.",
+                "link": "https://ioh.co.id/portal/id/iohindex",
+                "image": "https://asset.kompas.com/crops/HrxgpCZqgjizsyvSTwfljhoslRM=/0x0:1000x667/1200x800/data/photo/2024/04/30/6630ecd34ca86.jpg"
+            },
+            {
+                "title": "CV. Catur Bhakti Mandiri",
+                "badge": "Full Time",
+                "date": "October 2023 - June 2025",
+                "description": "I work full-time at CV. Catur Bhakti Mandiri. During my time there, I've developed two large e-commerce sites: Lunarea and Ilena. I used the CodeIgniter framework and integrated the payment system through Midtrans.",
+                "link": "https://caturbhaktimandiri.com",
+                "image": "/img/cbm.png"
+            },
+            {
+                "title": "PT. Nusapala Berkah Autonomous",
+                "badge": "Full Time",
+                "date": "June 2025 - Now",
+                "description": "I currently work at PT. Nusapala Berkah Autonomous as a Full Stack Developer. In this role, I was entrusted with the company's largest project, Asta Parking, built using Laravel. During my work on the project, I successfully added various new features and performed bug fixes according to the company's client's needs and requests, thereby improving the overall system quality and performance.",
+                "link": "https://nusapalaberkahautonomous.com",
+                "image": "https://nusapalagroup.com/wp-content/uploads/2021/06/VIEW-11-1000x1000-1.jpg"
+            }
+        ]
+    }
+}
