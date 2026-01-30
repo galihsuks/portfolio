@@ -15,7 +15,7 @@ export default function WorkflowSteps() {
     }[];
 
     return (
-        <section className="mt-32 relative">
+        <section className="mt-32 relative" id="work-section">
             <SectionTitle
                 title={messages.workflow.title}
                 description={messages.workflow.description}

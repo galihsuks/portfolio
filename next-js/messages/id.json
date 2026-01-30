@@ -7,15 +7,21 @@
     },
     "ability": {
         "title": "Apa yang bisa saya lakukan?",
-        "subtitle": "Saya dapat bekerja sebagai frontend atau backend developer menggunakan tools berikut —"
+        "subtitle": "Saya dapat bekerja sebagai frontend atau backend developer menggunakan tools berikut —",
+        "extra_skills": [
+            "Integrasi Midtrans",
+            "WordPress",
+            "Pembuatan dan penerapan WebSocket",
+            "Bekerja individu maupun dalam tim"
+        ]
     },
     "navbar": {
         "list": [
-            { "name": "Siapa Aku", "href": "/" },
-            { "name": "Kemampuan", "href": "#agents" },
-            { "name": "Pengalaman", "href": "#use-cases" },
-            { "name": "Proyek", "href": "#pricing" },
-            { "name": "Kontak", "href": "#docs" }
+            { "name": "Siapa Aku", "href": "#hero-section" },
+            { "name": "Kemampuan", "href": "#ability-section" },
+            { "name": "Pengalaman", "href": "#work-section" },
+            { "name": "Proyek", "href": "#project-section" },
+            { "name": "Kontak", "href": "#contact-section" }
         ],
         "cta_cv": "My Resume"
     },
@@ -48,5 +54,97 @@
                 "image": "https://nusapalagroup.com/wp-content/uploads/2021/06/VIEW-11-1000x1000-1.jpg"
             }
         ]
+    },
+    "projects": {
+        "title": "Proyek Saya",
+        "subtitle": "Kumpulan karya terbaru saya — dibangun dengan berbagai teknologi dan framework",
+        "created_in": "Dibuat pada",
+        "projects": [
+            {
+                "name": "LUNAREA Furniture",
+                "created_in": "2023 - 2025",
+                "badge": "E-Commerce",
+                "icon": "shop",
+                "list": [
+                    "Codeigniter sebagai framework utama",
+                    "React Native untuk UI yang membutuhkan DOM kompleks",
+                    "Integrasi Midtrans",
+                    "Menggunakan MySQL untuk menyimpan berbagai data",
+                    "Implementasi sistem role user"
+                ],
+                "link": "https://lunareafurniture.com/",
+                "image": "/img/lunarea.jpg"
+            },
+            {
+                "name": "ILENA Furniture",
+                "created_in": "2023 - 2025",
+                "badge": "E-Commerce",
+                "icon": "shop",
+                "list": [
+                    "Codeigniter sebagai framework utama",
+                    "React Native untuk UI yang membutuhkan DOM kompleks",
+                    "Integrasi Midtrans",
+                    "Menggunakan MySQL untuk menyimpan berbagai data",
+                    "Implementasi sistem role user"
+                ],
+                "link": "https://ilenafurniture.com/",
+                "image": "/img/ilena.jpg"
+            },
+            {
+                "name": "IOTKU",
+                "created_in": "2024 - Sekarang",
+                "badge": "Aplikasi IoT",
+                "icon": "iot",
+                "list": [
+                    "NextJS sebagai framework frontend",
+                    "ExpressJS sebagai framework backend",
+                    "MySQL sebagai database",
+                    "Implementasi WebSocket",
+                    "Tailwind sebagai framework CSS"
+                ],
+                "link": "https://iotku.org/",
+                "account_login": {
+                    "email": "galih8.4.2001@gmail.com",
+                    "password": "123456"
+                },
+                "image": "/img/iotku.jpg"
+            },
+            {
+                "name": "OMONG",
+                "created_in": "2024",
+                "badge": "Aplikasi Chat",
+                "icon": "chat",
+                "list": [
+                    "NextJS sebagai framework frontend",
+                    "ExpressJS sebagai framework backend",
+                    "Implementasi WebSocket",
+                    "Database MongoDB",
+                    "Tailwind sebagai framework CSS"
+                ],
+                "link": "https://omong.galihsuks.com/",
+                "image": "/img/omong.jpg"
+            },
+            {
+                "name": "DEAKOR",
+                "created_in": "2022",
+                "badge": "Edukasi",
+                "icon": "education",
+                "list": [
+                    "ReactJS sebagai framework frontend",
+                    "Firebase sebagai layanan backend, yaitu Firestore dan App Hosting"
+                ],
+                "link": "https://tugasakhir-ku.web.app/",
+                "account_login": {
+                    "email": "galih@gmail.com",
+                    "password": "12345678"
+                },
+                "image": "/img/TA.jpeg"
+            }
+        ]
+    },
+    "contact": {
+        "title": "Kontak Saya",
+        "subtitle_1": "Mari kita diskusikan —",
+        "subtitle_2": "dan dapatkan layanan terbaik dari saya!"
     }
 }

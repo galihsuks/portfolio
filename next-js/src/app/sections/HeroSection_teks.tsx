@@ -2,6 +2,7 @@
 
 import { after } from "node:test";
 import { useEffect, useRef, useState } from "react";
+import { delay } from "../_services/utils";
 
 const arrPosisi = ["Full Stack", "Frontend", "Backend"];
 
@@ -46,11 +47,7 @@ export default function HeroSectionTeks() {
 
     return (
         <>
-            <p>{teks} Developer</p>
+            <p className="text-xs md:text-sm">{teks} Developer</p>
         </>
     );
-}
-
-function delay(ms: number) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
 }

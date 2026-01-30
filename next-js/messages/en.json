@@ -7,15 +7,21 @@
     },
     "ability": {
         "title": "What can I do?",
-        "subtitle": "I can work as a frontend or backend developer using the following tools —"
+        "subtitle": "I can work as a frontend or backend developer using the following tools —",
+        "extra_skills": [
+            "Midtrans integration",
+            "WordPress",
+            "WebSocket creation and implementation",
+            "Work individually and in a team"
+        ]
     },
     "navbar": {
         "list": [
-            { "name": "Who Am I", "href": "/" },
-            { "name": "Ability", "href": "#agents" },
-            { "name": "Experience", "href": "#use-cases" },
-            { "name": "Projects", "href": "#pricing" },
-            { "name": "Contact Me", "href": "#docs" }
+            { "name": "Who Am I", "href": "#hero-section" },
+            { "name": "Ability", "href": "#ability-section" },
+            { "name": "Experience", "href": "#work-section" },
+            { "name": "Projects", "href": "#project-section" },
+            { "name": "Contact Me", "href": "#contact-section" }
         ],
         "cta_cv": "My Resume"
     },
@@ -48,5 +54,99 @@
                 "image": "https://nusapalagroup.com/wp-content/uploads/2021/06/VIEW-11-1000x1000-1.jpg"
             }
         ]
+    },
+    "projects": {
+        "title": "My Projects",
+        "subtitle": "A collection of my latest work — built with various technologies and frameworks",
+        "created_in": "Created in",
+        "projects": [
+            {
+                "name": "LUNAREA Furniture",
+                "created_in": "2023 - 2025",
+                "badge": "E-Commerce",
+                "icon": "shop",
+                "list": [
+                    "Codeigniter as the main framework",
+                    "React Native for UIs that require complex DOMs",
+                    "Midtrans integration",
+                    "Used MySQL to store various data",
+                    "User role implementation"
+                ],
+                "link": "https://lunareafurniture.com/",
+                "image": "/img/lunarea.jpg"
+            },
+            {
+                "name": "ILENA Furniture",
+                "created_in": "2023 - 2025",
+                "badge": "E-Commerce",
+                "icon": "shop",
+                "list": [
+                    "Codeigniter as the main framework",
+                    "React Native for UIs that require complex DOMs",
+                    "Midtrans integration",
+                    "Used MySQL to store various data",
+                    "User role implementation"
+                ],
+                "link": "https://ilenafurniture.com/",
+                "image": "/img/ilena.jpg"
+            },
+            {
+                "name": "IOTKU",
+                "created_in": "2024 - NOW",
+                "badge": "IOT Apps",
+                "icon": "iot",
+                "list": [
+                    "The frontend framework used is NextJS",
+                    "ExpressJS as the backend framework",
+                    "MySQL as the database",
+                    "WebSocket implementation",
+                    "Tailwind as the CSS framework"
+                ],
+                "link": "https://iotku.org/",
+                "account_login": {
+                    "email": "galih8.4.2001@gmail.com",
+                    "password": "123456"
+                },
+                "image": "/img/iotku.jpg"
+            },
+            {
+                "name": "OMONG",
+                "created_in": "2024",
+                "badge": "Chat Apps",
+                "icon": "chat",
+
+                "list": [
+                    "NextJS as the frontend framework",
+                    "ExpressJS as the backend framework",
+                    "WebSocket implementation",
+                    "MongoDB database",
+                    "Tailwind as the CSS framework"
+                ],
+                "link": "https://omong.galihsuks.com/",
+                "image": "/img/omong.jpg"
+            },
+            {
+                "name": "DEAKOR",
+                "created_in": "2022",
+                "badge": "Education",
+                "icon": "education",
+
+                "list": [
+                    "ReactJS for the frontend framework",
+                    "Firebase for the backend services, namely Firestore and App Hosting"
+                ],
+                "link": "https://tugasakhir-ku.web.app/",
+                "account_login": {
+                    "email": "galih@gmail.com",
+                    "password": "12345678"
+                },
+                "image": "/img/TA.jpeg"
+            }
+        ]
+    },
+    "contact": {
+        "title": "Get In Touch",
+        "subtitle_1": "Let's discuss with me —",
+        "subtitle_2": "and get the best service from me!"
     }
 }
