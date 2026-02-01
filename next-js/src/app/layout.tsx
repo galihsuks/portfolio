@@ -37,7 +37,7 @@ export const metadata: Metadata = {
         url: new URL(envVar.frontendURL),
         images: [
             {
-                url: `${envVar.frontendURL}/my_photo_meta.jpg`,
+                url: `${envVar.frontendURL}/my_photo_meta.jpg?v=20260201172100`,
                 width: 720,
                 height: 720,
                 alt: "Galih Sukmamukti Hidayatullah",
@@ -56,7 +56,7 @@ export const metadata: Metadata = {
         title: "Galih Sukmamukti Hidayatullah",
         description:
             "Full Stack Developer | Web Developer | Frontend Developer | Backend Developer",
-        images: [`${envVar.frontendURL}/my_photo_meta.jpg`],
+        images: [`${envVar.frontendURL}/my_photo_meta.jpg?v=20260201172100`],
         // creator: "@galihsuks",
     },
     robots: {
