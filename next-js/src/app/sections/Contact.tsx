@@ -1,10 +1,4 @@
-import {
-    ArrowRightIcon,
-    GithubIcon,
-    InstagramIcon,
-    MailsIcon,
-    PhoneIcon,
-} from "lucide-react";
+import { GithubIcon, InstagramIcon, MailsIcon, PhoneIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 

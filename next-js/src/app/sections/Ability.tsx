@@ -3,6 +3,7 @@ import { useMessages } from "next-intl";
 import SectionTitle from "../components/SectionTitle";
 import { useEffect, useRef, useState } from "react";
 import { CheckIcon, ChevronDownIcon } from "lucide-react";
+import Image from "next/image";
 
 const listsAll = [
     [
@@ -285,10 +286,12 @@ export default function Ability() {
                             key={index}
                             className={`flex items-center gap-0 group transition-all duration-400 item-icon ${onHover ? "hover:gap-4" : list.id == curId ? "gap-4" : ""}`}
                         >
-                            <img
+                            <Image
                                 src={list.image}
                                 alt="logo"
                                 className={`${list.shape}`}
+                                width={200}
+                                height={200}
                             />
                             <div
                                 className={`${onHover ? "group-hover:max-w-80" : list.id == curId ? "max-w-80" : ""} max-w-0 overflow-hidden transition-all duration-400`}
@@ -316,10 +319,12 @@ export default function Ability() {
                             key={index}
                             className={`flex items-center gap-0 group transition-all duration-400 item-icon ${onHover ? "hover:gap-2" : list.id == curId ? "gap-2" : ""}`}
                         >
-                            <img
+                            <Image
                                 src={list.image}
                                 alt="logo"
                                 className={`${list.shape}`}
+                                width={200}
+                                height={200}
                             />
                             <div
                                 className={`${onHover ? "group-hover:max-w-80" : list.id == curId ? "max-w-80" : ""} max-w-0 overflow-hidden transition-all duration-400`}
@@ -371,7 +376,7 @@ export default function Ability() {
 }
 
 function getRangeId(firstId: number, many: number) {
-    let result = [];
+    const result = [];
     for (let i = 0; i < many; i++) {
         result.push(firstId + i);
     }

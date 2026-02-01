@@ -2,7 +2,6 @@
 
 import { MenuIcon, XIcon } from "lucide-react";
 import { useMessages } from "next-intl";
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -30,6 +29,7 @@ export default function Navbar() {
     }[];
 
     useEffect(() => {
+        /* eslint-disable @typescript-eslint/no-explicit-any */
         const observers = [] as any;
         sections.forEach((id) => {
             const el = document.getElementById(id);

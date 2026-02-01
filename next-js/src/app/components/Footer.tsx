@@ -1,21 +1,4 @@
-import {
-    DribbbleIcon,
-    GithubIcon,
-    LinkedinIcon,
-    TwitterIcon,
-} from "lucide-react";
-import { useMessages } from "next-intl";
-import Image from "next/image";
-import Link from "next/link";
-
 export default function Footer() {
-    const messages = useMessages();
-
-    const links = messages.navbar.list as {
-        name: string;
-        href: string;
-    }[];
-
     const currentDate = new Date();
     const currentYear = currentDate.getFullYear();
 

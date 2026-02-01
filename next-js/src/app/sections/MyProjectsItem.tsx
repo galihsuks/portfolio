@@ -4,13 +4,13 @@ import {
     ArrowRight,
     CheckIcon,
     GraduationCapIcon,
-    Link,
     MessageSquareIcon,
     ShoppingBagIcon,
     WifiHighIcon,
 } from "lucide-react";
 import { useMessages } from "next-intl";
-import { SetStateAction, useState } from "react";
+import Image from "next/image";
+import { useState } from "react";
 
 const icons = {
     shop: ShoppingBagIcon,
@@ -67,11 +67,13 @@ const ItemProject = ({
                         <IconBadge className="size-3 md:size-3.5" />
                         <span>{data.badge}</span>
                     </div>
-                    <img
+                    <Image
                         src={data.image}
                         alt={data.name}
                         className="rounded-xl mb-3 aspect-video object-cover object-bottom md:hidden block"
                         style={{ zIndex: 5 }}
+                        width={700}
+                        height={700}
                     />
                     <h3 className="text-2xl md:text-3xl font-semibold">
                         {data.name.split(" ")[0]}
@@ -122,10 +124,12 @@ const ItemProject = ({
                     )}
                 </div>
 
-                <img
+                <Image
                     style={{ zIndex: 5 }}
                     src={data.image}
                     alt={data.name}
+                    width={700}
+                    height={700}
                     className="rounded-e-xl aspect-video object-cover object-bottom hidden md:block"
                 />
             </div>
@@ -140,9 +144,11 @@ const ItemProject = ({
                     username={data.account_login?.email ?? ""}
                     password={data.account_login?.password ?? ""}
                 />
-                <img
+                <Image
                     src={data.image}
                     alt={data.name}
+                    width={700}
+                    height={700}
                     className="rounded-s-xl aspect-video object-cover object-bottom hidden md:block"
                     style={{ zIndex: 5 }}
                 />
@@ -158,9 +164,11 @@ const ItemProject = ({
                         <IconBadge className="size-3 md:size-3.5" />
                         <span>{data.badge}</span>
                     </div>
-                    <img
+                    <Image
                         src={data.image}
                         alt={data.name}
+                        width={700}
+                        height={700}
                         className="rounded-xl mb-3 aspect-video object-cover object-bottom md:hidden block"
                         style={{ zIndex: 5 }}
                     />

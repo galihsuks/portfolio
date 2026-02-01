@@ -1,6 +1,5 @@
 "use client";
 
-import { after } from "node:test";
 import { useEffect, useRef, useState } from "react";
 import { delay } from "../_services/utils";
 
@@ -25,13 +24,14 @@ export default function HeroSectionTeks() {
         return () => {
             clearInterval(looping);
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     async function rewrite(before: string, after: string) {
         const lengthBefore = before.length;
         const lengthAfter = after.length;
         let teksBefore = before;
-        let teksAfter = after;
+        const teksAfter = after;
 
         for (let i = 0; i < lengthBefore; i++) {
             teksBefore = teksBefore.slice(0, -1);

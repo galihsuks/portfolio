@@ -1,6 +1,7 @@
 import { ExternalLinkIcon } from "lucide-react";
 import SectionTitle from "../components/SectionTitle";
 import { useMessages } from "next-intl";
+import Image from "next/image";
 
 export default function WorkflowSteps() {
     const messages = useMessages();
@@ -40,9 +41,11 @@ export default function WorkflowSteps() {
                         key={index}
                         className={`flex items-center justify-center gap-6 md:gap-20 ${index % 2 !== 0 ? "flex-col md:flex-row-reverse" : "flex-col md:flex-row"}`}
                     >
-                        <img
+                        <Image
                             src={step.image}
                             alt="step"
+                            width={720}
+                            height={480}
                             className="flex-1 h-auto w-full max-w-sm rounded-2xl"
                         />
                         <div

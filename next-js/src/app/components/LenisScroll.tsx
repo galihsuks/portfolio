@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useLayoutEffect } from "react";
+import { useLayoutEffect } from "react";
 import Lenis from "lenis";
 
 export default function LenisScroll() {
@@ -8,7 +8,6 @@ export default function LenisScroll() {
         const lenis = new Lenis({
             duration: 1.2,
             smoothWheel: true,
-            // smoothTouch: false,
             anchors: true,
         });
 

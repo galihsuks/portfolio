@@ -1,24 +1,6 @@
-import {
-    ArrowRight,
-    ArrowRightCircleIcon,
-    CheckIcon,
-    CrownIcon,
-    GraduationCapIcon,
-    MessageSquareIcon,
-    ShoppingBagIcon,
-    WifiHighIcon,
-    ZapIcon,
-} from "lucide-react";
 import SectionTitle from "../components/SectionTitle";
 import { useMessages } from "next-intl";
 import ItemProject from "./MyProjectsItem";
-
-const icons = {
-    shop: ShoppingBagIcon,
-    iot: WifiHighIcon,
-    chat: MessageSquareIcon,
-    education: GraduationCapIcon,
-};
 
 interface ProjectInterface {
     name: string;

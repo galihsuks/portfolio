@@ -5,6 +5,7 @@ import "./globals.css";
 import { Metadata } from "next";
 import { envVar } from "./_services/utils";
 
+/* eslint-disable @typescript-eslint/no-unused-vars */
 const poppins = Poppins({
     subsets: ["latin"],
     variable: "--font-sans",
