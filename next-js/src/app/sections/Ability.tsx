@@ -4,117 +4,238 @@ import SectionTitle from "../components/SectionTitle";
 import { useEffect, useRef, useState } from "react";
 import { CheckIcon, ChevronDownIcon } from "lucide-react";
 
-const lists = [
-    {
-        id: 1,
-        image: "/img/figma_white.png",
-        label: "Figma",
-        since: "2021",
-        shape: "ver",
-    },
-    {
-        id: 2,
-        image: "/img/html_white.png",
-        label: "HTML",
-        since: "2022",
-        shape: "ver",
-    },
-    {
-        id: 3,
-        image: "/img/css_white.png",
-        label: "CSS",
-        since: "2022",
-        shape: "ver",
-    },
-    {
-        id: 4,
-        image: "/img/js_white.png",
-        label: "JavaScript",
-        since: "2022",
-        shape: "ver",
-    },
-    {
-        id: 5,
-        image: "/img/php_white.png",
-        label: "PHP",
-        since: "2023",
-        shape: "hor",
-    },
+const listsAll = [
+    [
+        {
+            id: 1,
+            image: "/img/figma_white.png",
+            label: "Figma",
+            since: "2021",
+            shape: "ver",
+        },
+        {
+            id: 2,
+            image: "/img/html_white.png",
+            label: "HTML",
+            since: "2022",
+            shape: "ver",
+        },
+        {
+            id: 3,
+            image: "/img/css_white.png",
+            label: "CSS",
+            since: "2022",
+            shape: "ver",
+        },
+        {
+            id: 4,
+            image: "/img/js_white.png",
+            label: "JavaScript",
+            since: "2022",
+            shape: "ver",
+        },
+        {
+            id: 5,
+            image: "/img/php_white.png",
+            label: "PHP",
+            since: "2023",
+            shape: "hor",
+        },
+    ],
+    [
+        {
+            id: 6,
+            image: "/img/express_white.png",
+            label: "Express.js",
+            since: "2022",
+            shape: "hor",
+        },
+        {
+            id: 7,
+            image: "/img/firebase_white.png",
+            label: "Firebase",
+            since: "2022",
+            shape: "ver",
+        },
+        {
+            id: 8,
+            image: "/img/mongo_white.png",
+            label: "MongoDB",
+            since: "2021",
+            shape: "ver",
+        },
+        {
+            id: 9,
+            image: "/img/mysql_white.png",
+            label: "MySQL",
+            since: "2023",
+            shape: "ver",
+        },
+        {
+            id: 10,
+            image: "/img/bootstrap_white.png",
+            label: "Bootstrap",
+            since: "2023",
+            shape: "hor",
+        },
+    ],
+    [
+        {
+            id: 11,
+            image: "/img/react_white.png",
+            label: "React",
+            since: "2022",
+            shape: "ver",
+        },
+        {
+            id: 12,
+            image: "/img/ci_white.png",
+            label: "CodeIgniter",
+            since: "2023",
+            shape: "ver",
+        },
+        {
+            id: 13,
+            image: "/img/nextjs_white.png",
+            label: "Next.js",
+            since: "2024",
+            shape: "ver",
+        },
+        {
+            id: 14,
+            image: "/img/tailwind_white.png",
+            label: "Tailwind CSS",
+            since: "2024",
+            shape: "hor",
+        },
+        {
+            id: 15,
+            image: "/img/ts_white.png",
+            label: "TypeScript",
+            since: "2024",
+            shape: "ver",
+        },
+    ],
 ];
-const list2 = [
-    {
-        id: 6,
-        image: "/img/express_white.png",
-        label: "Express.js",
-        since: "2022",
-        shape: "hor",
-    },
-    {
-        id: 7,
-        image: "/img/firebase_white.png",
-        label: "Firebase",
-        since: "2022",
-        shape: "ver",
-    },
-    {
-        id: 8,
-        image: "/img/mongo_white.png",
-        label: "MongoDB",
-        since: "2021",
-        shape: "ver",
-    },
-    {
-        id: 9,
-        image: "/img/mysql_white.png",
-        label: "MySQL",
-        since: "2023",
-        shape: "ver",
-    },
-    {
-        id: 10,
-        image: "/img/bootstrap_white.png",
-        label: "Bootstrap",
-        since: "2023",
-        shape: "hor",
-    },
+
+const listsAllHP = [
+    [
+        {
+            id: 1,
+            image: "/img/figma_white.png",
+            label: "Figma",
+            since: "2021",
+            shape: "ver",
+        },
+        {
+            id: 2,
+            image: "/img/html_white.png",
+            label: "HTML",
+            since: "2022",
+            shape: "ver",
+        },
+        {
+            id: 3,
+            image: "/img/css_white.png",
+            label: "CSS",
+            since: "2022",
+            shape: "ver",
+        },
+    ],
+    [
+        {
+            id: 4,
+            image: "/img/js_white.png",
+            label: "JavaScript",
+            since: "2022",
+            shape: "ver",
+        },
+        {
+            id: 5,
+            image: "/img/php_white.png",
+            label: "PHP",
+            since: "2023",
+            shape: "hor",
+        },
+        {
+            id: 6,
+            image: "/img/express_white.png",
+            label: "Express.js",
+            since: "2022",
+            shape: "hor",
+        },
+    ],
+    [
+        {
+            id: 7,
+            image: "/img/firebase_white.png",
+            label: "Firebase",
+            since: "2022",
+            shape: "ver",
+        },
+        {
+            id: 8,
+            image: "/img/mongo_white.png",
+            label: "MongoDB",
+            since: "2021",
+            shape: "ver",
+        },
+        {
+            id: 9,
+            image: "/img/mysql_white.png",
+            label: "MySQL",
+            since: "2023",
+            shape: "ver",
+        },
+    ],
+    [
+        {
+            id: 10,
+            image: "/img/bootstrap_white.png",
+            label: "Bootstrap",
+            since: "2023",
+            shape: "hor",
+        },
+        {
+            id: 11,
+            image: "/img/react_white.png",
+            label: "React",
+            since: "2022",
+            shape: "ver",
+        },
+        {
+            id: 12,
+            image: "/img/ci_white.png",
+            label: "CodeIgniter",
+            since: "2023",
+            shape: "ver",
+        },
+    ],
+    [
+        {
+            id: 13,
+            image: "/img/nextjs_white.png",
+            label: "Next.js",
+            since: "2024",
+            shape: "ver",
+        },
+        {
+            id: 14,
+            image: "/img/tailwind_white.png",
+            label: "Tailwind CSS",
+            since: "2024",
+            shape: "hor",
+        },
+        {
+            id: 15,
+            image: "/img/ts_white.png",
+            label: "TypeScript",
+            since: "2024",
+            shape: "ver",
+        },
+    ],
 ];
-const list3 = [
-    {
-        id: 11,
-        image: "/img/react_white.png",
-        label: "React",
-        since: "2022",
-        shape: "ver",
-    },
-    {
-        id: 12,
-        image: "/img/ci_white.png",
-        label: "CodeIgniter",
-        since: "2023",
-        shape: "ver",
-    },
-    {
-        id: 13,
-        image: "/img/nextjs_white.png",
-        label: "Next.js",
-        since: "2024",
-        shape: "ver",
-    },
-    {
-        id: 14,
-        image: "/img/tailwind_white.png",
-        label: "Tailwind CSS",
-        since: "2024",
-        shape: "hor",
-    },
-    {
-        id: 15,
-        image: "/img/ts_white.png",
-        label: "TypeScript",
-        since: "2024",
-        shape: "ver",
-    },
-];
+
 const arraynya = [1, 15, 9, 8, 2, 7, 3, 14, 4, 5, 12, 10, 13, 6, 11];
 
 export default function Ability() {
@@ -141,102 +262,80 @@ export default function Ability() {
     }, []);
 
     return (
-        <section className="mt-32" id="ability-section">
+        <section className="mt-25 md:mt-32" id="ability-section">
             <SectionTitle
                 title={messages.ability.title}
                 description={messages.ability.subtitle}
             />
-            <div
-                className="container-icon-ability flex flex-wrap justify-center gap-10 max-w-3xl w-full mx-auto py-5 mt-5"
-                onMouseEnter={() => {
-                    setOnHover(true);
-                }}
-                onMouseLeave={() => {
-                    setOnHover(false);
-                }}
-            >
-                {lists.map((list, index) => (
-                    <div
-                        key={index}
-                        className={`flex items-center gap-0 group transition-all duration-400 item-icon ${onHover ? "hover:gap-4" : list.id == curId ? "gap-4" : ""}`}
-                    >
-                        <img
-                            src={list.image}
-                            alt="logo"
-                            className={`h-7 w-auto ${list.shape}`}
-                        />
+
+            {/* DESKTOP VERSION */}
+            {listsAll.map((lists, ind_list) => (
+                <div
+                    key={ind_list}
+                    className={`container-icon-ability hidden md:flex flex-wrap justify-center gap-10 max-w-3xl w-full mx-auto py-2 md:py-5 ${ind_list == 0 ? "mt-3 md:mt-5" : ind_list == listsAll.length - 1 ? "mb-3 md:mb-5" : ""}`}
+                    onMouseEnter={() => {
+                        setOnHover(true);
+                    }}
+                    onMouseLeave={() => {
+                        setOnHover(false);
+                    }}
+                >
+                    {lists.map((list, index) => (
                         <div
-                            className={`${onHover ? "group-hover:max-w-80" : list.id == curId ? "max-w-80" : ""} max-w-0 overflow-hidden transition-all duration-400`}
+                            key={index}
+                            className={`flex items-center gap-0 group transition-all duration-400 item-icon ${onHover ? "hover:gap-4" : list.id == curId ? "gap-4" : ""}`}
                         >
-                            <p className="font-semibold text-2xl text-nowrap">
-                                {list.label}
-                            </p>
-                            <p className="text-nowrap">{list.since}</p>
+                            <img
+                                src={list.image}
+                                alt="logo"
+                                className={`${list.shape}`}
+                            />
+                            <div
+                                className={`${onHover ? "group-hover:max-w-80" : list.id == curId ? "max-w-80" : ""} max-w-0 overflow-hidden transition-all duration-400`}
+                            >
+                                <p className="font-semibold text-base md:text-2xl text-nowrap">
+                                    {list.label}
+                                </p>
+                                <p className="text-nowrap text-xs md:text-base">
+                                    {list.since}
+                                </p>
+                            </div>
                         </div>
-                    </div>
-                ))}
-            </div>
-            <div
-                className="container-icon-ability flex flex-wrap justify-center gap-10 max-w-3xl w-full mx-auto py-5"
-                onMouseEnter={() => {
-                    setOnHover(true);
-                }}
-                onMouseLeave={() => {
-                    setOnHover(false);
-                }}
-            >
-                {list2.map((list, index) => (
-                    <div
-                        key={index}
-                        className={`flex items-center gap-0 group hover:gap-4 transition-all duration-400 item-icon ${onHover ? "hover:gap-4" : list.id == curId ? "gap-4" : ""}`}
-                    >
-                        <img
-                            src={list.image}
-                            alt="logo"
-                            className={`h-7 w-auto ${list.shape}`}
-                        />
+                    ))}
+                </div>
+            ))}
+
+            {/* MOBILE VERSION */}
+            {listsAllHP.map((lists, ind_list) => (
+                <div
+                    key={ind_list}
+                    className={`container-icon-ability flex md:hidden flex-wrap justify-center ${getRangeId(lists[0].id, 3).includes(curId) ? "gap-5" : "gap-10"} transition-all duration-300 max-w-3xl w-full mx-auto py-5 ${ind_list == 0 ? "mt-7 md:mt-5" : ind_list == listsAllHP.length - 1 ? "mb-7 md:mb-5" : ""}`}
+                >
+                    {lists.map((list, index) => (
                         <div
-                            className={`${onHover ? "group-hover:max-w-80" : list.id == curId ? "max-w-80" : ""} max-w-0 overflow-hidden transition-all duration-400`}
+                            key={index}
+                            className={`flex items-center gap-0 group transition-all duration-400 item-icon ${onHover ? "hover:gap-2" : list.id == curId ? "gap-2" : ""}`}
                         >
-                            <p className="font-semibold text-2xl text-nowrap">
-                                {list.label}
-                            </p>
-                            <p className="text-nowrap">{list.since}</p>
+                            <img
+                                src={list.image}
+                                alt="logo"
+                                className={`${list.shape}`}
+                            />
+                            <div
+                                className={`${onHover ? "group-hover:max-w-80" : list.id == curId ? "max-w-80" : ""} max-w-0 overflow-hidden transition-all duration-400`}
+                            >
+                                <p className="font-semibold text-sm md:text-2xl text-nowrap">
+                                    {list.label}
+                                </p>
+                                <p className="text-nowrap text-xs md:text-base">
+                                    {list.since}
+                                </p>
+                            </div>
                         </div>
-                    </div>
-                ))}
-            </div>
-            <div
-                className="container-icon-ability flex flex-wrap justify-center gap-10 max-w-3xl w-full mx-auto py-5 mb-5"
-                onMouseEnter={() => {
-                    setOnHover(true);
-                }}
-                onMouseLeave={() => {
-                    setOnHover(false);
-                }}
-            >
-                {list3.map((list, index) => (
-                    <div
-                        key={index}
-                        className={`flex items-center gap-0 group hover:gap-4 transition-all duration-400 item-icon ${onHover ? "hover:gap-4" : list.id == curId ? "gap-4" : ""}`}
-                    >
-                        <img
-                            src={list.image}
-                            alt="logo"
-                            className={`h-7 w-auto ${list.shape}`}
-                        />
-                        <div
-                            className={`${onHover ? "group-hover:max-w-80" : list.id == curId ? "max-w-80" : ""} max-w-0 overflow-hidden transition-all duration-400`}
-                        >
-                            <p className="font-semibold text-2xl text-nowrap">
-                                {list.label}
-                            </p>
-                            <p className="text-nowrap">{list.since}</p>
-                        </div>
-                    </div>
-                ))}
-            </div>
-            <div className="flex flex-col glass rounded-md max-w-3xl w-full mx-auto">
+                    ))}
+                </div>
+            ))}
+            <div className="flex flex-col glass rounded-md md:max-w-3xl max-w-80 w-full mx-auto">
                 <h3
                     className="flex cursor-pointer hover:bg-white/10 transition items-start justify-between gap-4 p-4 font-medium"
                     onClick={() => setIsOpen(!isOpen)}
@@ -247,7 +346,7 @@ export default function Ability() {
                     />
                 </h3>
                 <div
-                    className={`px-4 text-sm/6 transition-all duration-400 overflow-hidden ${isOpen ? "pt-2 pb-4 max-h-80" : "max-h-0"}`}
+                    className={`px-4 text-sm/6 transition-all duration-400 overflow-hidden ${isOpen ? "pt-1 md:pt-2 pb-4 max-h-80" : "max-h-0"}`}
                 >
                     <div className="flex flex-col">
                         {extra_skills.map((skill, ind_s) => (
@@ -257,11 +356,11 @@ export default function Ability() {
                             >
                                 <div className="rounded-full glass border-0 p-1">
                                     <CheckIcon
-                                        className="size-3 text-white"
+                                        className="size-2 md:size-3 text-white"
                                         strokeWidth={3}
                                     />
                                 </div>
-                                <p>{skill}</p>
+                                <p className="text-xs md:text-sm">{skill}</p>
                             </div>
                         ))}
                     </div>
@@ -269,4 +368,12 @@ export default function Ability() {
             </div>
         </section>
     );
+}
+
+function getRangeId(firstId: number, many: number) {
+    let result = [];
+    for (let i = 0; i < many; i++) {
+        result.push(firstId + i);
+    }
+    return result;
 }

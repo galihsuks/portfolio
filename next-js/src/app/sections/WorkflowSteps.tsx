@@ -15,13 +15,13 @@ export default function WorkflowSteps() {
     }[];
 
     return (
-        <section className="mt-32 relative" id="work-section">
+        <section className="mt-25 md:mt-32 relative" id="work-section">
             <SectionTitle
                 title={messages.workflow.title}
                 description={messages.workflow.description}
             />
 
-            <div className="relative space-y-20 md:space-y-30 mt-20">
+            <div className="relative space-y-13 md:space-y-30 mt-14 md:mt-20">
                 <div className="flex-col items-center hidden md:flex absolute left-1/2 -translate-x-1/2">
                     <p className="flex items-center justify-center font-medium my-10 aspect-square bg-black/15 p-2 rounded-full">
                         01
@@ -47,7 +47,7 @@ export default function WorkflowSteps() {
                         />
                         <div
                             key={index}
-                            className="flex-1 flex flex-col gap-6 md:px-6 max-w-md"
+                            className="flex-1 flex flex-col gap-4 md:gap-6 md:px-6 max-w-md"
                         >
                             <div>
                                 <h3 className="text-2xl font-medium text-white mb-2">
@@ -57,19 +57,19 @@ export default function WorkflowSteps() {
                                     <button className="btn glass py-1 px-3 text-xs">
                                         {step.badge}
                                     </button>
-                                    <h5 className="text-1xl font-medium text-white">
+                                    <h5 className="md:text-1xl text-xs font-medium text-white">
                                         {step.date}
                                     </h5>
                                 </div>
                             </div>
-                            <p className="text-gray-100 text-sm/6 pb-2">
+                            <p className="text-gray-100 text-xs/5 md:text-sm/6 pb-0 md:pb-2">
                                 {step.description}
                             </p>
                             <a
                                 href={step.link}
                                 className="flex items-center gap-2"
                             >
-                                View company
+                                {messages.workflow.cta}
                                 <ExternalLinkIcon className="size-4" />
                             </a>
                         </div>

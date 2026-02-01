@@ -3,6 +3,7 @@ import { Poppins } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
 import { Metadata } from "next";
+import { envVar } from "./_services/utils";
 
 const poppins = Poppins({
     subsets: ["latin"],
@@ -25,22 +26,22 @@ export const metadata: Metadata = {
     title: "Galih Sukmamukti Hidayatullah",
     description:
         "Full Stack Developer | Web Developer | Frontend Developer | Backend Developer",
-    metadataBase: new URL(process.env.NEXT_PUBLIC_FRONTEND_URL ?? ""),
+    metadataBase: new URL(envVar.frontendURL),
     openGraph: {
         title: "Galih Sukmamukti Hidayatullah",
         description:
             "Full Stack Developer | Web Developer | Frontend Developer | Backend Developer",
         type: "website",
         siteName: "Galih Sukmamukti Hidayatullah",
-        url: new URL(process.env.NEXT_PUBLIC_FRONTEND_URL ?? ""),
-        // images: [
-        //     {
-        //         url: "https://images.unsplash.com/photo-1549487027-8c93657755e0?q=80&w=770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        //         width: 1200,
-        //         height: 630,
-        //         alt: "Galih Sukmamukti Hidayatullah",
-        //     },
-        // ],
+        url: new URL(envVar.frontendURL),
+        images: [
+            {
+                url: `${envVar.frontendURL}/my_photo_meta.jpg`,
+                width: 720,
+                height: 720,
+                alt: "Galih Sukmamukti Hidayatullah",
+            },
+        ],
         locale: "id_ID",
     },
     icons: {
@@ -54,9 +55,7 @@ export const metadata: Metadata = {
         title: "Galih Sukmamukti Hidayatullah",
         description:
             "Full Stack Developer | Web Developer | Frontend Developer | Backend Developer",
-        // images: [
-        //     "https://images.unsplash.com/photo-1549487027-8c93657755e0?q=80&w=770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        // ],
+        images: [`${envVar.frontendURL}/my_photo_meta.jpg`],
         // creator: "@galihsuks",
     },
     robots: {

@@ -34,7 +34,6 @@ export default function Navbar() {
         sections.forEach((id) => {
             const el = document.getElementById(id);
             if (!el) return;
-            console.log(el);
             const observer = new IntersectionObserver(
                 ([entry]) => {
                     if (entry.isIntersecting) {
@@ -72,7 +71,7 @@ export default function Navbar() {
     return (
         <>
             <nav
-                className={`sticky top-0 z-50 flex w-full items-center justify-between px-4 py-3.5 md:px-16 lg:px-24 transition-colors ${isScrolled ? "bg-white/15 backdrop-blur-lg" : ""}`}
+                className={`sticky top-0 z-50 flex w-full items-center justify-between px-4 py-0 md:py-3.5 md:px-16 lg:px-24 transition-colors ${isScrolled ? "bg-white/15 backdrop-blur-lg" : ""}`}
             >
                 <a href="#!">
                     <h1 className="font-hand text-2xl/19 md:text-3xl/19">
@@ -111,11 +110,18 @@ export default function Navbar() {
             <div
                 className={`fixed inset-0 z-50 flex flex-col items-center justify-center gap-6 bg-black/20 text-lg font-medium backdrop-blur-2xl transition duration-300 md:hidden ${isOpen ? "translate-x-0" : "-translate-x-full"}`}
             >
+                <button
+                    onClick={() => setIsOpen(false)}
+                    className="rounded-md p-2 glass"
+                >
+                    <XIcon />
+                </button>
                 {links.map((link) => (
                     <Link
                         key={link.name}
                         href={link.href}
                         onClick={() => setIsOpen(false)}
+                        className="text-xs"
                     >
                         {link.name}
                     </Link>
@@ -123,18 +129,13 @@ export default function Navbar() {
 
                 <Link
                     href="/"
-                    className="btn glass"
+                    className="btn glass text-sm"
                     onClick={() => setIsOpen(false)}
                 >
                     {messages.navbar.cta_cv}
                 </Link>
 
-                <button
-                    onClick={() => setIsOpen(false)}
-                    className="rounded-md p-2 glass"
-                >
-                    <XIcon />
-                </button>
+                <LanguageSwitcher />
             </div>
         </>
     );

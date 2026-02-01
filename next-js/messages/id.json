@@ -28,6 +28,7 @@
     "workflow": {
         "title": "Pengalaman Berharga Saya",
         "description": "Saya seorang full stack developer dari Klaten, Jawa Tengah dengan pengalaman di berbagai perusahaan",
+        "cta": "Lihat Perusahaan",
         "list": [
             {
                 "title": "Indosat Ooredoo Hutchison",
@@ -59,6 +60,11 @@
         "title": "Proyek Saya",
         "subtitle": "Kumpulan karya terbaru saya — dibangun dengan berbagai teknologi dan framework",
         "created_in": "Dibuat pada",
+        "modal_login": {
+            "label": "Akun login",
+            "cta_next": "Lanjut",
+            "cta_cancel": "Batal"
+        },
         "projects": [
             {
                 "name": "LUNAREA Furniture",

@@ -33,7 +33,7 @@ export default function HeroSection() {
                     {t("description")}
                 </p>
 
-                <div className="flex flex-col md:flex-row items-start md:items-center w-80 md:w-full gap-4 md:gap-3 mt-6">
+                <div className="flex flex-col md:flex-row justify-center items-start md:items-center w-80 md:w-full gap-4 md:gap-3 mt-6">
                     <Link
                         href={envVar.curriculumVitaeURL as string}
                         target="_blank"

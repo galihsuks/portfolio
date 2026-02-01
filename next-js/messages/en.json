@@ -27,7 +27,8 @@
     },
     "workflow": {
         "title": "My Experiences",
-        "description": "I am a full stack developer from Klaten, Jawa Tengah with 3 years of experience in multiple companies",
+        "description": "I am a full stack developer from Klaten, Central Java with 3 years of experience in multiple companies",
+        "cta": "View Company",
         "list": [
             {
                 "title": "Indosat Ooredoo Hutchison",
@@ -59,6 +60,11 @@
         "title": "My Projects",
         "subtitle": "A collection of my latest work — built with various technologies and frameworks",
         "created_in": "Created in",
+        "modal_login": {
+            "label": "Login account",
+            "cta_next": "Next",
+            "cta_cancel": "Cancel"
+        },
         "projects": [
             {
                 "name": "LUNAREA Furniture",
