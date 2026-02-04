@@ -1,3 +1,4 @@
+import ChatApp from "./components/ChatApp";
 import Footer from "./components/Footer";
 import LenisScroll from "./components/LenisScroll";
 import Navbar from "./components/Navbar";
@@ -24,6 +25,7 @@ export default function HomePage() {
                 <Projects />
                 <Contact />
             </main>
+            <ChatApp />
             <Footer />
         </>
     );
