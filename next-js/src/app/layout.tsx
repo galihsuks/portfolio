@@ -49,7 +49,7 @@ export const metadata: Metadata = {
         icon: `./LOGO.png`,
     },
     alternates: {
-        canonical: `${process.env.NEXT_PUBLIC_FRONTEND_URL ?? ""}`,
+        canonical: `${envVar.frontendURL}`,
     },
     twitter: {
         card: "summary_large_image",

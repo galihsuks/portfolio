@@ -240,9 +240,6 @@ const ModalProject = ({
 }) => {
     const messages = useMessages();
 
-    console.log("ini dari modal");
-    console.log(messages.projects.modal_login);
-
     return (
         <div
             className={`fixed inset-0 z-50 flex flex-col items-center justify-center gap-3 bg-black/20 text-lg font-medium backdrop-blur-2xl transition duration-300 ${isOpen ? "translate-x-0" : "-translate-x-full"}`}
