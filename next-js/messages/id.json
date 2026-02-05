@@ -152,5 +152,10 @@
         "title": "Kontak Saya",
         "subtitle_1": "Mari kita diskusikan —",
         "subtitle_2": "dan dapatkan layanan terbaik dari saya!"
+    },
+    "chatbot": {
+        "opening": "Hai!👋 Tuliskan nama kamu agar Galih bisa memanggilmu!",
+        "text_1": "Hai",
+        "text_2": "Tulisan pesan untuk Galih"
     }
 }

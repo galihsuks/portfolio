@@ -154,5 +154,10 @@
         "title": "Get In Touch",
         "subtitle_1": "Let's discuss with me —",
         "subtitle_2": "and get the best service from me!"
+    },
+    "chatbot": {
+        "opening": "Hi!👋 Tell your name so Galih can call you!",
+        "text_1": "Hi",
+        "text_2": "Write a message for Galih"
     }
 }

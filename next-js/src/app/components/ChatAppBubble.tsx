@@ -1,5 +1,7 @@
 "use client";
 
+import { convertToTanggalIndonesia } from "../_services/utils";
+
 export default function BubbleChat({
     pesan,
     reply = null,
@@ -24,7 +26,11 @@ export default function BubbleChat({
             <div className="flex justify-end ps-10">
                 <div className="rounded-t-lg rounded-s-lg px-3 py-2 glass">
                     <p className="mb-1">{pesan}</p>
-                    <p className="text-end opacity-50 text-xs">{time}</p>
+                    {time && (
+                        <p className="text-end opacity-50 text-xs">
+                            {convertToTanggalIndonesia(time).jam_menit}
+                        </p>
+                    )}
                 </div>
             </div>
         );
@@ -33,7 +39,11 @@ export default function BubbleChat({
             <div className="flex justify-start pe-10">
                 <div className="rounded-t-lg rounded-e-lg bg-gray-50 px-3 py-2 text-gray-700">
                     <p className="mb-1">{pesan}</p>
-                    <p className="text-end opacity-50 text-xs">{time}</p>
+                    {time && (
+                        <p className="text-end opacity-50 text-xs">
+                            {convertToTanggalIndonesia(time).jam_menit}
+                        </p>
+                    )}
                 </div>
             </div>
         );
