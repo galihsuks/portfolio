@@ -56,7 +56,7 @@ export async function getRoomIdGalih() {
 
 export async function setCredentials(email: string, sandi: string) {
     const cred = btoa(`${email};${sandi}`);
-    (await cookies()).set("Y3JlZGVudGlhbHM=", cred);
+    (await cookies()).set("Y3JlZGVudGlhbHM", cred);
 }
 export async function reLogin(
     statusCode: number,
@@ -64,10 +64,12 @@ export async function reLogin(
     returnBefore: { status: number; data: any },
 ) {
     if (statusCode == 401) {
-        await logout();
-        const cred = (await cookies()).get("Y3JlZGVudGlhbHM=")?.value;
+        const cred = (await cookies()).get("Y3JlZGVudGlhbHM")?.value;
+        await logout(true);
         if (cred) {
             const decodedString = atob(cred);
+            console.log("credential");
+            console.log(decodedString);
             const arrCred = decodedString.split(";");
             await login(arrCred[0], arrCred[1]);
             const resFunc = (await executeFunc()) as {
@@ -93,8 +95,8 @@ export async function getToken() {
     return token;
 }
 
-export async function logout(tokenParam?: string) {
-    const token = tokenParam ?? (await getToken());
+export async function logout(isReLogin = false) {
+    const token = await getToken();
     const fetching = await fetch(`${envVar.backendURL}/auth/logout`, {
         method: "POST",
         headers: {
@@ -105,8 +107,10 @@ export async function logout(tokenParam?: string) {
     });
     const response = (await fetching.json()) as Type_ApiSignupRes;
     (await cookies()).delete("token");
-    (await cookies()).delete("Y3JlZGVudGlhbHM=");
-    (await cookies()).delete("admin_room");
+    if (!isReLogin) {
+        (await cookies()).delete("Y3JlZGVudGlhbHM");
+        (await cookies()).delete("admin_room");
+    }
     return {
         status: fetching.status,
         data: response,

@@ -22,7 +22,7 @@ import {
     setRoomIdGalih,
     signup,
 } from "../_services/api";
-import { Type_Chat, Type_RoomAll } from "../_services/interface";
+import { Type_Chat, Type_RoomAll, Type_user } from "../_services/interface";
 import {
     chatBot,
     convertToTanggalIndonesia,
@@ -49,6 +49,7 @@ export default function ChatApp() {
     const [userOnline, setUserOnline] = useState<string[]>([]);
     const [idChatReplay, setIdChatReplay] = useState<Type_Chat | null>(null);
     const [pendingChat, setPendingChat] = useState<string[]>([]);
+    const [scrollTrigger, setScrollTrigger] = useState(false);
 
     useEffect(() => {
         (async () => {
@@ -87,6 +88,10 @@ export default function ChatApp() {
         })();
     }, []);
 
+    useEffect(() => {
+        setScrollTrigger((prev) => !prev);
+    }, [open]);
+
     const selectRoom = async (id: string) => {
         if (chatsByRoom[id]) {
             setActiveRoom(chatsByRoom[id]);
@@ -116,10 +121,12 @@ export default function ChatApp() {
         if (!messageInput) {
             return;
         }
+        const messageInputLocal = messageInput;
+        setMessageInput("");
         if (passwordInput.current) {
             const fetchingLogin = await login(
                 "galih8.4.2001@gmail.com",
-                messageInput,
+                messageInputLocal,
             );
             if (fetchingLogin.status != 200) {
                 setError(fetchingLogin.data.pesan);
@@ -130,7 +137,7 @@ export default function ChatApp() {
         }
         const roomId = activeRoom?._id;
         if (roomId == "INIT") {
-            if (messageInput == "Galih Sukmamukti" && activeRoom) {
+            if (messageInputLocal == "Galih Sukmamukti" && activeRoom) {
                 const chatsInit = chatBot("", 3, messages.chatbot, "") as any;
                 setActiveRoom({
                     ...activeRoom,
@@ -140,11 +147,16 @@ export default function ChatApp() {
                 return;
             }
             setLoading("Redirect to realtime chat..");
-            const email = `${messageInput.replace(/[^a-zA-Z0-9]/g, "")}${Date.now()}@galihsuks.com`;
-            const nama = messageInput.replace(/[^a-zA-Z0-9 ]/g, "");
+            const email = `${messageInputLocal.replace(/[^a-zA-Z0-9]/g, "")}${Date.now()}@galihsuks.com`;
+            const nama = messageInputLocal.replace(/[^a-zA-Z0-9 ]/g, "");
             const password = createRandomString();
             await signup(email, nama, password);
-            await login(email, password);
+            const responseLogin = await login(email, password);
+            idUser.current = {
+                _id: responseLogin.data.id,
+                email: responseLogin.data.email,
+                nama: responseLogin.data.nama,
+            };
             const newRoom = await postRoom(
                 "private",
                 ["galih8.4.2001@gmail.com"],
@@ -171,58 +183,76 @@ export default function ChatApp() {
         setIdChatReplay(null);
         if (idUser.current && activeRoom) {
             const newPesanPending = newMessageWithPending(
-                messageInput,
+                messageInputLocal,
                 idChatReplay,
                 idUser.current,
             );
             setPendingChat([...pendingChat, newPesanPending._id]);
             addChat(newPesanPending);
+            setScrollTrigger((prev) => !prev);
             const fetchingPostChat = await postChat(
                 roomId ?? "",
-                messageInput,
+                messageInputLocal,
                 idChatReplayParam,
             );
-            setActiveRoom({
-                ...activeRoom,
-                chats: activeRoom.chats.map((c) => {
-                    const tglRoom = convertToTanggalIndonesia(
-                        c.tanggal,
-                    ).tglBlnTahun_number_dash_reverse;
-                    const tglNewChat = getYmdNow();
-                    if (tglRoom == tglNewChat) {
-                        return {
-                            tanggal: c.tanggal,
-                            chats: c.chats.map((sc) => {
-                                if (sc._id == newPesanPending._id) {
-                                    return {
-                                        ...sc,
-                                        _id: fetchingPostChat.data._id,
-                                        createdAt:
-                                            fetchingPostChat.data.createdAt,
-                                        updatedAt:
-                                            fetchingPostChat.data.updatedAt,
-                                        seenUsers:
-                                            fetchingPostChat.data.seenUsers,
-                                    };
-                                } else return sc;
-                            }),
-                        };
-                    } else return c;
-                }),
-            });
-            setPendingChat(pendingChat.filter((a) => a != newPesanPending._id));
+            setActiveRoom((prev: any) => ({
+                ...prev,
+                chats: prev.chats.map(
+                    (c: { tanggal: string; chats: Type_Chat[] }) => {
+                        const tglRoom = c.tanggal;
+                        const tglNewChat = getYmdNow();
+                        if (tglRoom == tglNewChat) {
+                            return {
+                                tanggal: c.tanggal,
+                                chats: c.chats.map((sc) => {
+                                    if (sc._id == newPesanPending._id) {
+                                        return {
+                                            ...sc,
+                                            _id: fetchingPostChat.data._id,
+                                            createdAt:
+                                                fetchingPostChat.data.createdAt,
+                                            updatedAt:
+                                                fetchingPostChat.data.updatedAt,
+                                            seenUsers:
+                                                fetchingPostChat.data.seenUsers,
+                                        };
+                                    } else return sc;
+                                }),
+                            };
+                        } else return c;
+                    },
+                ),
+            }));
+            setPendingChat((prev) =>
+                prev.filter((a) => a != newPesanPending._id),
+            );
+            setScrollTrigger((prev) => !prev);
         }
     };
 
     const addChat = (pesan: Type_Chat) => {
         if (activeRoom) {
+            const tglNewChat = getYmdNow();
+            const isAvailableTgl = activeRoom.chats.filter(
+                (e) => e.tanggal == tglNewChat,
+            ).length;
+            if (isAvailableTgl == 0) {
+                setActiveRoom({
+                    ...activeRoom,
+                    chats: [
+                        ...activeRoom.chats,
+                        {
+                            tanggal: tglNewChat,
+                            chats: [pesan],
+                        },
+                    ],
+                });
+                return;
+            }
             setActiveRoom({
                 ...activeRoom,
                 chats: activeRoom.chats.map((c) => {
-                    const tglRoom = convertToTanggalIndonesia(
-                        c.tanggal,
-                    ).tglBlnTahun_number_dash_reverse;
-                    const tglNewChat = getYmdNow();
+                    const tglRoom = c.tanggal;
                     if (tglRoom == tglNewChat) {
                         return {
                             tanggal: c.tanggal,
@@ -243,14 +273,14 @@ export default function ChatApp() {
         <>
             <button
                 onClick={() => setOpen(true)}
-                className={`cursor-pointer fixed z-50 flex ${open ? "h-[0px] w-[0px] bottom-8 right-8" : "glass bottom-6 right-6 h-14 w-14"} items-center justify-center rounded-full shadow-lg hover:bg-white hover:text-zinc-600 transition-all duration-200`}
+                className={`cursor-pointer fixed z-50 flex ${open ? "h-[0px] w-[0px] bottom-8 right-8" : "glass bottom-3 md:bottom-6 right-3 md:right-6 h-14 w-14"} items-center justify-center rounded-full shadow-lg hover:bg-white hover:text-zinc-600 transition-all duration-200`}
             >
                 <MessageCircle className="h-6 w-6" />
             </button>
 
             <div
                 data-lenis-prevent
-                className={`transition-all duration-400 overflow-hidden fixed z-50 flex flex-col rounded-xl bg-black/70 border-white/10 backdrop-blur-lg shadow-2xl ${open ? "h-[500px] w-[350px] border bottom-6 right-6" : "h-[0px] w-[0px] bottom-8 right-8"}`}
+                className={`transition-all duration-400 overflow-hidden fixed z-50 flex flex-col rounded-xl bg-black/70 border-white/10 backdrop-blur-lg shadow-2xl ${open ? "h-[500px] md:w-[350px] w-[90%] border md:bottom-6 md:right-6 bottom-3 right-3" : "h-[0px] w-[0px] bottom-8 right-8"}`}
             >
                 <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
                     {loading ? (
@@ -275,7 +305,7 @@ export default function ChatApp() {
                                         {activeRoom.anggota.filter(
                                             (a) => a._id != idUser.current?._id,
                                         )[0].online.last && (
-                                            <p className="text-sm text-zinc-500">
+                                            <p className="text-xs text-zinc-500">
                                                 {userOnline.includes(
                                                     activeRoom.anggota.filter(
                                                         (a) =>
@@ -328,6 +358,8 @@ export default function ChatApp() {
                             ) : (
                                 <>
                                     <ChatRoomView
+                                        pendingChat={pendingChat}
+                                        scrollTrigger={scrollTrigger}
                                         room={activeRoom}
                                         idUser={idUser.current?._id ?? ""}
                                     />
@@ -404,31 +436,57 @@ function RoomList({
 function ChatRoomView({
     room,
     idUser,
+    scrollTrigger,
+    pendingChat,
 }: {
     room: Type_RoomAll;
     idUser: string;
+    scrollTrigger: boolean;
+    pendingChat: string[];
 }) {
+    const chatsContainer = useRef<HTMLDivElement | null>(null);
+
+    useEffect(() => {
+        if (chatsContainer.current) {
+            chatsContainer.current.scrollTo({
+                top: chatsContainer.current.scrollHeight,
+                behavior: "smooth",
+            });
+        }
+    }, [scrollTrigger]);
+
     return (
         <>
-            {/* Messages */}
-            <div className="flex-1 overflow-y-auto px-4 py-3 text-sm">
+            <div
+                className="flex-1 overflow-y-auto px-4 py-3 text-sm"
+                ref={chatsContainer}
+            >
                 {room.chats.map((r, ind_r) => (
-                    <div className="space-y-2" key={ind_r}>
+                    <div className="space-y-2 mb-2" key={ind_r}>
                         {r.tanggal && (
                             <ItemChat
+                                reply={null}
+                                _id=""
+                                pendingChat={pendingChat}
                                 tipe={"waktu"}
                                 pesan=""
                                 mine={true}
                                 waktu={r.tanggal}
+                                anggotaGroup={room.anggota}
                             />
                         )}
                         {r.chats.map((c, ind_c) => (
                             <ItemChat
+                                anggotaGroup={room.anggota}
+                                reply={c.idChatReply}
+                                _id={c._id}
+                                pendingChat={pendingChat}
                                 key={ind_c}
                                 tipe={"bubble"}
                                 pesan={c.pesan}
                                 mine={c.idPengirim._id == idUser}
                                 waktu={c.createdAt}
+                                seen={c.seenUsers}
                             />
                         ))}
                     </div>
@@ -443,11 +501,38 @@ const ItemChat = ({
     waktu,
     pesan,
     mine,
+    pendingChat,
+    _id,
+    reply,
+    anggotaGroup,
+    seen = [],
 }: {
+    _id: string;
     tipe: string;
     waktu: string;
     pesan: string;
     mine: boolean;
+    pendingChat: string[];
+    reply: null | {
+        pesan: string;
+        idPengirim: {
+            nama: string;
+        };
+    };
+    seen?: {
+        timestamp: string;
+        user: Type_user;
+        _id: string;
+    }[];
+    anggotaGroup: {
+        online: {
+            status: boolean;
+            last: string;
+        };
+        _id: string;
+        email: string;
+        nama: string;
+    }[];
 }) => {
     switch (tipe) {
         case "waktu":
@@ -470,6 +555,17 @@ const ItemChat = ({
                 </span>
             );
         default:
-            return <BubbleChat pesan={pesan} time={waktu} mine={mine} />;
+            return (
+                <BubbleChat
+                    _id={_id}
+                    pendingChat={pendingChat}
+                    pesan={pesan}
+                    time={waktu}
+                    mine={mine}
+                    reply={reply}
+                    anggotaGroup={anggotaGroup}
+                    seen={seen}
+                />
+            );
     }
 };

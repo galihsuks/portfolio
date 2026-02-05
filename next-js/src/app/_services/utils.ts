@@ -100,7 +100,9 @@ export function groupChatsByDate(chats: Type_Chat[]): Type_GroupedChat[] {
 
     for (const chat of chats) {
         // ambil tanggal saja (YYYY-MM-DD)
-        const tanggal = new Date(chat.createdAt).toISOString().split("T")[0];
+        const tanggal = convertToTanggalIndonesia(
+            chat.createdAt,
+        ).tglBlnTahun_number_dash_reverse;
         if (!map.has(tanggal)) {
             map.set(tanggal, []);
         }
