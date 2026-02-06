@@ -42,7 +42,7 @@ export default function ChatApp() {
     const [error, setError] = useState("");
     const [messageInput, setMessageInput] = useState("");
     const passwordInput = useRef(false);
-    const [chatsByRoom, setChatsByRoom] = useState<any>({});
+    const [roomOpend, setRoomOpened] = useState<string[]>([]);
     const idUser = useRef<{ _id: string; email: string; nama: string } | null>(
         null,
     );
@@ -57,7 +57,13 @@ export default function ChatApp() {
             const me = await getMe();
             if (me.status == 401) {
                 setLoading("");
-                const chatsInit = chatBot("", 1, messages.chatbot, "") as any;
+                const chatsInit = chatBot(
+                    "",
+                    1,
+                    messages.chatbot,
+                    "",
+                    "",
+                ) as any;
                 setActiveRoom(chatsInit);
                 return;
             } else if (me.status != 200) {
@@ -93,8 +99,11 @@ export default function ChatApp() {
     }, [open]);
 
     const selectRoom = async (id: string) => {
-        if (chatsByRoom[id]) {
-            setActiveRoom(chatsByRoom[id]);
+        if (roomOpend.includes(id)) {
+            const findRoom = rooms.find((e) => e._id == id);
+            if (findRoom) {
+                setActiveRoom(findRoom);
+            }
             return;
         }
         setLoading("Fetching chats..");
@@ -109,10 +118,7 @@ export default function ChatApp() {
             ...roomDetails.data,
             chats: chatsGrouped,
         };
-        setChatsByRoom({
-            ...chatsByRoom,
-            [id]: structActiveRoomNew,
-        });
+        setRoomOpened((prev) => [...prev, id]);
         setActiveRoom(structActiveRoomNew);
     };
 
@@ -129,7 +135,14 @@ export default function ChatApp() {
                 messageInputLocal,
             );
             if (fetchingLogin.status != 200) {
-                setError(fetchingLogin.data.pesan);
+                const chatsInit = chatBot(
+                    "",
+                    4,
+                    messages.chatbot,
+                    "",
+                    fetchingLogin.data.pesan,
+                ) as any;
+                addChat(chatsInit);
                 return;
             }
             window.location.reload();
@@ -137,8 +150,17 @@ export default function ChatApp() {
         }
         const roomId = activeRoom?._id;
         if (roomId == "INIT") {
-            if (messageInputLocal == "Galih Sukmamukti" && activeRoom) {
-                const chatsInit = chatBot("", 3, messages.chatbot, "") as any;
+            if (
+                messageInputLocal.toLowerCase() == "galih sukmamukti" &&
+                activeRoom
+            ) {
+                const chatsInit = chatBot(
+                    "",
+                    3,
+                    messages.chatbot,
+                    "",
+                    "",
+                ) as any;
                 setActiveRoom({
                     ...activeRoom,
                     chats: chatsInit,
@@ -164,11 +186,13 @@ export default function ChatApp() {
             );
             await setRoomIdGalih(newRoom.data._id);
             const fetchingNewRoom = await getChatsByRoomId(newRoom.data._id);
+            const tglSkrg = getYmdNow();
             const chatsInit = chatBot(
                 nama,
                 2,
                 messages.chatbot,
-                fetchingNewRoom.data.createdAt,
+                tglSkrg,
+                "",
             ) as any;
             const structActiveRoomNew = {
                 ...fetchingNewRoom.data,
@@ -264,6 +288,34 @@ export default function ChatApp() {
         }
     };
 
+    useEffect(() => {
+        if (activeRoom && activeRoom.chats.length > 0) {
+            const lastchat =
+                activeRoom.chats[activeRoom.chats.length - 1].chats[
+                    activeRoom.chats[activeRoom.chats.length - 1].chats.length -
+                        1
+                ];
+            const roomCurrent = rooms.find((r) => r._id == activeRoom._id);
+            setRooms((prev) =>
+                prev
+                    .map((r) => {
+                        if (r._id == activeRoom._id) {
+                            return {
+                                ...roomCurrent,
+                                ...activeRoom,
+                                lastchat,
+                            };
+                        } else return r;
+                    })
+                    .sort(
+                        (a, b) =>
+                            Date.parse(b.lastchat?.createdAt ?? "") -
+                            Date.parse(a.lastchat?.createdAt ?? ""),
+                    ),
+            );
+        }
+    }, [activeRoom]);
+
     const actionLogout = async () => {
         await logout();
         window.location.reload();
@@ -292,7 +344,11 @@ export default function ChatApp() {
                                     {idUser.current?._id ==
                                         "6981ac566e0d5d6ecef90484" && (
                                         <button
-                                            onClick={() => setActiveRoom(null)}
+                                            onClick={() => {
+                                                if (pendingChat.length == 0) {
+                                                    setActiveRoom(null);
+                                                }
+                                            }}
                                             className="flex items-center gap-2 text-sm text-gray-600"
                                         >
                                             <ArrowLeft className="h-4 w-4" />
@@ -340,6 +396,12 @@ export default function ChatApp() {
                     </button>
                 </div>
 
+                {error && (
+                    <div className="rounded-md px-2 m-2 py-1 bg-rose-200 text-rose-900">
+                        {error}
+                    </div>
+                )}
+
                 <div
                     className={`flex flex-1 flex-col overflow-hidden ${loading && "justify-center items-center"}`}
                 >
@@ -354,6 +416,7 @@ export default function ChatApp() {
                                 <RoomList
                                     rooms={rooms}
                                     selectRoom={selectRoom}
+                                    idUser={idUser.current?._id ?? ""}
                                 />
                             ) : (
                                 <>
@@ -402,28 +465,67 @@ export default function ChatApp() {
 function RoomList({
     rooms,
     selectRoom,
+    idUser,
 }: {
     rooms: Type_RoomAll[];
+    idUser: string;
     selectRoom: (id: string) => void;
 }) {
+    console.log({
+        rooms,
+        idUser,
+    });
     return (
-        <div className="flex flex-col divide-y">
-            {rooms.map((room) => (
+        <div className="flex flex-col divide-y divide-gray-800 overflow-y-auto">
+            {rooms.map((room, ind_room) => (
                 <button
+                    key={ind_room}
                     onClick={() => selectRoom(room._id)}
-                    className="px-4 py-3 text-left hover:bg-gray-100"
+                    className="px-4 py-3 text-left hover:bg-gray-100 hover:text-black"
                 >
-                    <p className="font-medium">{room.nama}</p>
-                    <p className="text-xs text-gray-500">
+                    <div className="flex gap-3">
+                        <div style={{ flex: 1 }}>
+                            <p className="font-medium">{room.nama}</p>
+                            <div className="text-xs text-gray-500">
+                                {room.lastchat && (
+                                    <div className="flex items-center gap-2">
+                                        {idUser ===
+                                            room.lastchat.idPengirim._id && (
+                                            <div>
+                                                <CheckCheckIcon
+                                                    className={`size-3 ${room.lastchat.seenUsers.length == room.anggota.length ? "text-rose-400" : "opacity-80"}`}
+                                                />
+                                            </div>
+                                        )}
+                                        <p className="line-clamp-1">{`${idUser === room.lastchat.idPengirim._id ? "You" : room.lastchat.idPengirim.nama.split(" ")[0]} : ${room.lastchat.pesan}`}</p>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
                         {room.lastchat && (
-                            <div className="flex items-center gap-2">
-                                <CheckCheckIcon
-                                    className={`size-2 text-pink-600`}
-                                />
-                                <p className="line-clamp-1">{`${room.lastchat.idPengirim.nama} : ${room.lastchat.pesan}`}</p>
+                            <div
+                                className={`flex flex-col items-end`}
+                                style={{ fontSize: "10px" }}
+                            >
+                                <p
+                                    className={`text-xs mb-1 ${room.lastchat.seenUsers.find((u) => u.user._id == idUser) ? "opacity-50" : "text-pink-300 font-semibold"}`}
+                                >
+                                    {
+                                        convertToTanggalIndonesia(
+                                            room.lastchat.createdAt,
+                                        ).smart_display
+                                    }
+                                </p>
+                                {!room.lastchat.seenUsers.find(
+                                    (u) => u.user._id == idUser,
+                                ) && (
+                                    <div className="rounded-full bg-pink-200 font-semibold text-pink-900 text-xs px-2 py-1">
+                                        {room.chatsUnread}
+                                    </div>
+                                )}
                             </div>
                         )}
-                    </p>
+                    </div>
                 </button>
             ))}
         </div>

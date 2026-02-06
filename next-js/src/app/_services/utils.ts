@@ -11,6 +11,77 @@ export function delay(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+function getSmartDisplay(date: Date, timezone: string) {
+    const locale = "id-ID";
+
+    // helper ambil Y-M-D dalam timezone
+    function getYMD(d: Date) {
+        const parts = new Intl.DateTimeFormat("en-CA", {
+            timeZone: timezone,
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+        }).formatToParts(d);
+
+        const y = parts.find((p) => p.type === "year")?.value;
+        const m = parts.find((p) => p.type === "month")?.value;
+        const d2 = parts.find((p) => p.type === "day")?.value;
+
+        return `${y}-${m}-${d2}`; // YYYY-MM-DD
+    }
+
+    const todayStr = getYMD(new Date());
+    const targetStr = getYMD(date);
+
+    // convert ke date object pure calendar (tanpa jam)
+    const todayDate = new Date(todayStr);
+    const targetDate = new Date(targetStr);
+
+    const diffMs = todayDate.getTime() - targetDate.getTime();
+    const diffDays = Math.round(diffMs / (1000 * 60 * 60 * 24));
+
+    // ambil jam:menit
+    const timeParts = new Intl.DateTimeFormat(locale, {
+        timeZone: timezone,
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+    }).formatToParts(date);
+
+    const h = timeParts.find((p) => p.type === "hour")?.value || "00";
+    const m = timeParts.find((p) => p.type === "minute")?.value || "00";
+
+    // RULE LOGIC
+    if (diffDays === 0) {
+        return `${h}:${m}`; // hari ini
+    }
+
+    if (diffDays === 1) {
+        return "Yesterday"; // kemarin
+    }
+
+    if (diffDays > 1 && diffDays <= 7) {
+        return new Intl.DateTimeFormat(locale, {
+            timeZone: timezone,
+            weekday: "long",
+        }).format(date); // nama hari
+    }
+
+    // > 7 hari → dd/mm/yyyy
+    const d = new Intl.DateTimeFormat(locale, {
+        timeZone: timezone,
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+    }).formatToParts(date);
+
+    const dd = d.find((p) => p.type === "day")?.value;
+    const mm = d.find((p) => p.type === "month")?.value;
+    const yy = d.find((p) => p.type === "year")?.value;
+
+    return `${dd}/${mm}/${yy}`;
+}
+
 export function convertToTanggalIndonesia(
     isoString: string,
     timezone: string = "Asia/Jakarta",
@@ -92,6 +163,7 @@ export function convertToTanggalIndonesia(
         jam_menit: `${hour}:${minute}`,
         jam_menit_detik: `${hour}:${minute}:${second}`,
         iso_local: `${year}-${monthNum}-${day}T${hour}:${minute}:${second}`,
+        smart_display: getSmartDisplay(date, timezone),
     };
 }
 
@@ -125,6 +197,7 @@ export function chatBot(
         text_2: string;
     },
     waktu: string,
+    error: string,
 ) {
     switch (step) {
         case 1:
@@ -255,6 +328,29 @@ export function chatBot(
                     ],
                 },
             ];
+        case 4:
+            return {
+                _id: "INITCHAT4",
+                pesan: `${error}!`,
+                idPengirim: {
+                    _id: "6981ac566e0d5d6ecef90484",
+                    email: "galih8.4.2001@gmail.com",
+                    nama: "Galih Sukmamukti",
+                },
+                seenUsers: [
+                    {
+                        timestamp: "2026-02-04T08:32:35.704Z",
+                        user: {
+                            _id: "6981ac566e0d5d6ecef90484",
+                            email: "galih8.4.2001@gmail.com",
+                            nama: "Galih Sukmamukti",
+                        },
+                        _id: "69830423e6f1e367d0d2a318",
+                    },
+                ],
+                createdAt: waktu,
+                updatedAt: waktu,
+            };
     }
 }
 

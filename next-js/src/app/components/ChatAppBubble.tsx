@@ -40,10 +40,6 @@ export default function BubbleChat({
     mine: boolean;
     pendingChat: string[];
 }) {
-    console.log({
-        seen: seen,
-        anggotaGroup,
-    });
     return (
         <div
             className={`flex ${mine ? "justify-end ps-10" : "justify-start pe-10"}`}

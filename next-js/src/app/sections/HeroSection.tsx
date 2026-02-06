@@ -23,17 +23,17 @@ export default function HeroSection() {
                     width={200}
                     height={200}
                 />
-                <h1 className="md:text-center text-4xl md:text-6xl/19 mt-4 font-semibold tracking-tight max-w-3xl w-80 md:w-full">
+                <h1 className="md:text-center text-4xl md:text-6xl/19 mt-4 font-semibold max-w-3xl md:w-full">
                     Galih Sukmamukti Hidayatullah
                 </h1>
                 <p
-                    className="md:text-center text-gray-100 text-xs/5 md:text-base/7 mt-6 w-80 md:w-full"
+                    className="md:text-center text-gray-100 text-xs/5 md:text-base/7 mt-6 md:w-full"
                     style={{ maxWidth: "1100px" }}
                 >
                     {t("description")}
                 </p>
 
-                <div className="flex flex-col md:flex-row justify-center items-start md:items-center w-80 md:w-full gap-4 md:gap-3 mt-6">
+                <div className="flex flex-col md:flex-row justify-center items-start md:items-center w-full gap-4 md:gap-3 mt-6">
                     <Link
                         href={envVar.curriculumVitaeURL as string}
                         target="_blank"

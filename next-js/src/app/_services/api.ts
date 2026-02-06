@@ -68,8 +68,6 @@ export async function reLogin(
         await logout(true);
         if (cred) {
             const decodedString = atob(cred);
-            console.log("credential");
-            console.log(decodedString);
             const arrCred = decodedString.split(";");
             await login(arrCred[0], arrCred[1]);
             const resFunc = (await executeFunc()) as {
@@ -165,6 +163,14 @@ export async function getRoomAll() {
 
 export async function getChatsByRoomId(roomId: string) {
     const token = await getToken();
+    await fetch(`${envVar.backendURL}/chat/${roomId}`, {
+        method: "GET",
+        headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        },
+    });
     const fetching = await fetch(`${envVar.backendURL}/room/${roomId}`, {
         method: "GET",
         headers: {

@@ -102,6 +102,7 @@ export type DateFormats = {
     jam_menit: string; // 13:45
     jam_menit_detik: string; // 13:45:10
     iso_local: string; // 2026-01-23T13:45:10
+    smart_display: string;
 };
 
 export interface Type_GroupedChat {
