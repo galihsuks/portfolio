@@ -188,7 +188,7 @@ export async function getChatsByRoomId(roomId: string) {
             Authorization: `Bearer ${token}`,
         },
     });
-    const response = await fetching.json();
+    const response = (await fetching.json()) as Type_RoomAllOriginal;
     const checkStatus = (await reLogin(fetching.status, getChatsByRoomId, {
         status: fetching.status,
         data: response,
@@ -203,6 +203,34 @@ export async function getChatsByRoomId(roomId: string) {
             room: response,
         },
     };
+}
+
+export async function seenChat(roomId: string) {
+    const token = await getToken();
+    const fetchingSeen = await fetch(`${envVar.backendURL}/chat/${roomId}`, {
+        method: "GET",
+        headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        },
+    });
+    const resSeen = await fetchingSeen.json();
+    const checkStatus = (await reLogin(fetchingSeen.status, seenChat, {
+        status: fetchingSeen.status,
+        data: resSeen,
+    })) as {
+        status: number;
+        data: {
+            room_id: string;
+            chats: string[];
+            addToSeenUsers: {
+                user: Type_user;
+                timestamp: number;
+            };
+        };
+    };
+    return checkStatus;
 }
 
 export async function postChat(

@@ -207,138 +207,106 @@ export function chatBot(
         text_1: string;
         text_2: string;
     },
-    waktu: string,
     error: string,
 ) {
+    const waktuIndo = getYmdNow();
+    const waktu = getMongoDateNow();
     switch (step) {
         case 1:
-            return {
-                _id: "INIT",
-                nama: "Galih Sukmamukti",
-                tipe: "private",
-                anggota: [
-                    {
-                        online: {
-                            status: false,
-                            last: "",
+            return [
+                {
+                    _id: "INIT",
+                    nama: "Galih Sukmamukti",
+                    tipe: "private",
+                    anggota: [
+                        {
+                            online: {
+                                status: false,
+                                last: "",
+                            },
+                            _id: "6981ac566e0d5d6ecef90484",
+                            email: "galih8.4.2001@gmail.com",
+                            nama: "Galih Sukmamukti",
                         },
-                        _id: "6981ac566e0d5d6ecef90484",
-                        email: "galih8.4.2001@gmail.com",
-                        nama: "Galih Sukmamukti",
-                    },
-                ],
-                chats: [
-                    {
-                        tanggal: "",
-                        chats: [
-                            {
-                                _id: "INITCHAT1",
-                                pesan: locale.opening,
-                                idPengirim: {
-                                    _id: "6981ac566e0d5d6ecef90484",
-                                    email: "galih8.4.2001@gmail.com",
-                                    nama: "Galih Sukmamukti",
-                                },
-                                seenUsers: [
-                                    {
-                                        timestamp: "2026-02-04T08:32:35.704Z",
-                                        user: {
-                                            _id: "6981ac566e0d5d6ecef90484",
-                                            email: "galih8.4.2001@gmail.com",
-                                            nama: "Galih Sukmamukti",
+                    ],
+                    chats: [
+                        {
+                            tanggal: waktuIndo,
+                            chats: [
+                                {
+                                    _id: "INITCHAT1",
+                                    pesan: locale.opening,
+                                    idPengirim: {
+                                        _id: "6981ac566e0d5d6ecef90484",
+                                        email: "galih8.4.2001@gmail.com",
+                                        nama: "Galih Sukmamukti",
+                                    },
+                                    seenUsers: [
+                                        {
+                                            timestamp:
+                                                "2026-02-04T08:32:35.704Z",
+                                            user: {
+                                                _id: "6981ac566e0d5d6ecef90484",
+                                                email: "galih8.4.2001@gmail.com",
+                                                nama: "Galih Sukmamukti",
+                                            },
+                                            _id: "69830423e6f1e367d0d2a318",
                                         },
-                                        _id: "69830423e6f1e367d0d2a318",
-                                    },
-                                ],
-                                createdAt: "",
-                                updatedAt: "",
-                            },
-                        ],
+                                    ],
+                                    createdAt: waktu,
+                                    updatedAt: waktu,
+                                },
+                            ],
+                        },
+                    ],
+                },
+            ];
+        case 2:
+            return {
+                _id: "INITCHAT2",
+                pesan: `${locale.text_1} ${nama}! ${locale.text_2}!`,
+                idPengirim: {
+                    _id: "6981ac566e0d5d6ecef90484",
+                    email: "galih8.4.2001@gmail.com",
+                    nama: "Galih Sukmamukti",
+                },
+                seenUsers: [
+                    {
+                        timestamp: waktu,
+                        user: {
+                            _id: "6981ac566e0d5d6ecef90484",
+                            email: "galih8.4.2001@gmail.com",
+                            nama: "Galih Sukmamukti",
+                        },
+                        _id: "69830423e6f1e367d0d2a318",
                     },
                 ],
+                createdAt: waktu,
+                updatedAt: waktu,
             };
-        case 2:
-            return [
-                {
-                    tanggal: waktu,
-                    chats: [
-                        {
-                            _id: "INITCHAT2",
-                            pesan: `${locale.text_1} ${nama}! ${locale.text_2}!`,
-                            idPengirim: {
-                                _id: "6981ac566e0d5d6ecef90484",
-                                email: "galih8.4.2001@gmail.com",
-                                nama: "Galih Sukmamukti",
-                            },
-                            seenUsers: [
-                                {
-                                    timestamp: waktu,
-                                    user: {
-                                        _id: "6981ac566e0d5d6ecef90484",
-                                        email: "galih8.4.2001@gmail.com",
-                                        nama: "Galih Sukmamukti",
-                                    },
-                                    _id: "69830423e6f1e367d0d2a318",
-                                },
-                            ],
-                            createdAt: waktu,
-                            updatedAt: waktu,
-                        },
-                    ],
-                },
-            ];
         case 3:
-            return [
-                {
-                    tanggal: "",
-                    chats: [
-                        {
-                            _id: "INITCHAT1",
-                            pesan: locale.opening,
-                            idPengirim: {
-                                _id: "6981ac566e0d5d6ecef90484",
-                                email: "galih8.4.2001@gmail.com",
-                                nama: "Galih Sukmamukti",
-                            },
-                            seenUsers: [
-                                {
-                                    timestamp: "2026-02-04T08:32:35.704Z",
-                                    user: {
-                                        _id: "6981ac566e0d5d6ecef90484",
-                                        email: "galih8.4.2001@gmail.com",
-                                        nama: "Galih Sukmamukti",
-                                    },
-                                    _id: "69830423e6f1e367d0d2a318",
-                                },
-                            ],
-                            createdAt: "",
-                            updatedAt: "",
-                        },
-                        {
-                            _id: "INITCHAT3",
-                            pesan: "Password?",
-                            idPengirim: {
-                                _id: "6981ac566e0d5d6ecef90484",
-                                email: "galih8.4.2001@gmail.com",
-                                nama: "Galih Sukmamukti",
-                            },
-                            seenUsers: [
-                                {
-                                    timestamp: "2026-02-04T08:32:35.704Z",
-                                    user: {
-                                        _id: "6981ac566e0d5d6ecef90484",
-                                        email: "galih8.4.2001@gmail.com",
-                                        nama: "Galih Sukmamukti",
-                                    },
-                                    _id: "69830423e6f1e367d0d2a318",
-                                },
-                            ],
-                            createdAt: "",
-                            updatedAt: "",
-                        },
-                    ],
+            return {
+                _id: "INITCHAT3",
+                pesan: "Password?",
+                idPengirim: {
+                    _id: "6981ac566e0d5d6ecef90484",
+                    email: "galih8.4.2001@gmail.com",
+                    nama: "Galih Sukmamukti",
                 },
-            ];
+                seenUsers: [
+                    {
+                        timestamp: waktu,
+                        user: {
+                            _id: "6981ac566e0d5d6ecef90484",
+                            email: "galih8.4.2001@gmail.com",
+                            nama: "Galih Sukmamukti",
+                        },
+                        _id: "69830423e6f1e367d0d2a318",
+                    },
+                ],
+                createdAt: waktu,
+                updatedAt: waktu,
+            };
         case 4:
             return {
                 _id: "INITCHAT4",
@@ -418,6 +386,7 @@ export function newMessageWithPending(
         nama: string;
     },
 ): Type_Chat {
+    const dateMongo = getMongoDateNow();
     return {
         _id: `${Date.now()}`,
         pesan: pesan,
@@ -425,13 +394,13 @@ export function newMessageWithPending(
         idPengirim: idPengirim,
         seenUsers: [
             {
-                timestamp: "2026-02-04T08:32:35.704Z",
+                timestamp: dateMongo,
                 user: idPengirim,
                 _id: "",
             },
         ],
-        createdAt: "",
-        updatedAt: "",
+        createdAt: dateMongo,
+        updatedAt: dateMongo,
     };
 }
 
@@ -479,16 +448,14 @@ export const sendWs = {
         ws: WebSocket,
         setState: any,
         room_id: string,
-        chat_ids: string[],
-        userAdd: Type_user,
+        chats_room: Type_GroupedChat[],
     ) => {
         const dataJson = {
             tipe: "send",
             data: {
                 jenis: "seen",
                 room_id,
-                chat_ids,
-                userAdd,
+                chats_room,
             },
         };
         if (ws && ws.readyState === WebSocket.OPEN) {
@@ -497,4 +464,36 @@ export const sendWs = {
             setState((prev: any) => [...prev, dataJson]);
         }
     },
+    addChat: (
+        ws: WebSocket,
+        setState: any,
+        room_id: string,
+        chatAdd: Type_Chat,
+    ) => {
+        const dataJson = {
+            tipe: "send",
+            data: {
+                jenis: "chat-add",
+                room_id,
+                chatAdd,
+            },
+        };
+        if (ws && ws.readyState === WebSocket.OPEN) {
+            ws.send(JSON.stringify(dataJson));
+        } else {
+            setState((prev: any) => [...prev, dataJson]);
+        }
+    },
+};
+
+export const getLastChat = (
+    chatsRoom: { tanggal: string; chats: Type_Chat[] }[],
+) => {
+    console.log("ini di get last chat");
+    console.log(chatsRoom);
+    if (chatsRoom.length > 0 && chatsRoom[0].tanggal) {
+        return chatsRoom[chatsRoom.length - 1].chats[
+            chatsRoom[chatsRoom.length - 1].chats.length - 1
+        ];
+    } else return null;
 };
