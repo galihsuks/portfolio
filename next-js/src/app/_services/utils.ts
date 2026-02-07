@@ -1,4 +1,9 @@
-import { DateFormats, Type_Chat, Type_GroupedChat } from "./interface";
+import {
+    DateFormats,
+    Type_Chat,
+    Type_GroupedChat,
+    Type_user,
+} from "./interface";
 
 export const envVar = {
     backendURL: process.env.NEXT_PUBLIC_BACKEND_URL ?? "",
@@ -165,6 +170,12 @@ export function convertToTanggalIndonesia(
         iso_local: `${year}-${monthNum}-${day}T${hour}:${minute}:${second}`,
         smart_display: getSmartDisplay(date, timezone),
     };
+}
+
+export function getMongoDateNow(timestamp?: number) {
+    return timestamp
+        ? new Date(timestamp).toISOString()
+        : new Date().toISOString();
 }
 
 export function groupChatsByDate(chats: Type_Chat[]): Type_GroupedChat[] {
@@ -423,3 +434,67 @@ export function newMessageWithPending(
         updatedAt: "",
     };
 }
+
+export const sendWs = {
+    online: (ws: WebSocket, setState: any, primary_key: string) => {
+        const dataJson = {
+            tipe: "online",
+            data: {
+                primary_key,
+            },
+        };
+        if (ws && ws.readyState === WebSocket.OPEN) {
+            ws.send(JSON.stringify(dataJson));
+        } else {
+            setState((prev: any) => [...prev, dataJson]);
+        }
+    },
+    subscribe: (ws: WebSocket, setState: any, room_id: string) => {
+        const dataJson = {
+            tipe: "subscribe",
+            data: {
+                room_id,
+            },
+        };
+        if (ws && ws.readyState === WebSocket.OPEN) {
+            ws.send(JSON.stringify(dataJson));
+        } else {
+            setState((prev: any) => [...prev, dataJson]);
+        }
+    },
+    unsubscribe: (ws: WebSocket, setState: any, room_id: string) => {
+        const dataJson = {
+            tipe: "unsubscribe",
+            data: {
+                room_id,
+            },
+        };
+        if (ws && ws.readyState === WebSocket.OPEN) {
+            ws.send(JSON.stringify(dataJson));
+        } else {
+            setState((prev: any) => [...prev, dataJson]);
+        }
+    },
+    seen: (
+        ws: WebSocket,
+        setState: any,
+        room_id: string,
+        chat_ids: string[],
+        userAdd: Type_user,
+    ) => {
+        const dataJson = {
+            tipe: "send",
+            data: {
+                jenis: "seen",
+                room_id,
+                chat_ids,
+                userAdd,
+            },
+        };
+        if (ws && ws.readyState === WebSocket.OPEN) {
+            ws.send(JSON.stringify(dataJson));
+        } else {
+            setState((prev: any) => [...prev, dataJson]);
+        }
+    },
+};

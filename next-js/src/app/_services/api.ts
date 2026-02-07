@@ -8,6 +8,7 @@ import {
     Type_Chat,
     Type_RoomAll,
     Type_RoomAllOriginal,
+    Type_user,
 } from "./interface";
 import { envVar } from "./utils";
 
@@ -163,7 +164,7 @@ export async function getRoomAll() {
 
 export async function getChatsByRoomId(roomId: string) {
     const token = await getToken();
-    await fetch(`${envVar.backendURL}/chat/${roomId}`, {
+    const fetchingSeen = await fetch(`${envVar.backendURL}/chat/${roomId}`, {
         method: "GET",
         headers: {
             Accept: "application/json",
@@ -171,6 +172,14 @@ export async function getChatsByRoomId(roomId: string) {
             Authorization: `Bearer ${token}`,
         },
     });
+    const resSeen = (await fetchingSeen.json()) as {
+        room_id: string;
+        chats: string[];
+        addToSeenUsers: {
+            user: Type_user;
+            timestamp: number;
+        };
+    };
     const fetching = await fetch(`${envVar.backendURL}/room/${roomId}`, {
         method: "GET",
         headers: {
@@ -187,7 +196,13 @@ export async function getChatsByRoomId(roomId: string) {
         status: number;
         data: Type_RoomAllOriginal;
     };
-    return checkStatus;
+    return {
+        ...checkStatus,
+        data: {
+            seen: resSeen,
+            room: response,
+        },
+    };
 }
 
 export async function postChat(

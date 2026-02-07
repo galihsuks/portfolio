@@ -52,7 +52,7 @@ export default function BubbleChat({
                         className={`${mine ? "bg-black/50" : "bg-black/10"} w-full mt-1 rounded-md px-2 py-1`}
                     >
                         <p
-                            className={`text-xs line-clamp-1 mb-1 font-semibold ${mine ? "text-rose-400" : "text-rose-800"}`}
+                            className={`text-xs line-clamp-1 mb-1 font-semibold ${mine ? "text-pink-400" : "text-pink-800"}`}
                             style={{ fontSize: "10px" }}
                         >
                             {reply.idPengirim.nama}
@@ -83,7 +83,7 @@ export default function BubbleChat({
                         )}
                         {mine && (
                             <CheckCheckIcon
-                                className={`size-3 ${seen.length == anggotaGroup.length ? "text-rose-400" : "opacity-50"}`}
+                                className={`size-3 ${seen.length == anggotaGroup.length ? "text-pink-400" : "opacity-50"}`}
                             />
                         )}
                     </div>

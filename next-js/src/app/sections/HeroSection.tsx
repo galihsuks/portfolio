@@ -41,7 +41,10 @@ export default function HeroSection() {
                     >
                         {t("cta_cv")}
                     </Link>
-                    <button className="btn glass flex items-center justify-center gap-2 py-3">
+                    <button
+                        className="btn glass flex items-center justify-center gap-2 py-3"
+                        id="hire-me-btn"
+                    >
                         {t("cta_hire")}
                         <ArrowRightIcon className="size-4.5" />
                     </button>
