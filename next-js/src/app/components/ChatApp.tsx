@@ -472,7 +472,7 @@ export default function ChatApp() {
                 sendWs.online(ws.current!, setWsPending, responseLogin.data.id);
             }
 
-            let newRoom = await postRoom(
+            const newRoom = await postRoom(
                 "private",
                 ["galih8.4.2001@gmail.com"],
                 "",
