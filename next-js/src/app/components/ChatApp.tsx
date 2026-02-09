@@ -1,15 +1,8 @@
 "use client";
 
-import {
-    SetStateAction,
-    SyntheticEvent,
-    useEffect,
-    useRef,
-    useState,
-} from "react";
+import { SyntheticEvent, useEffect, useRef, useState } from "react";
 import {
     MessageCircle,
-    X,
     ArrowLeft,
     Send,
     CheckCheckIcon,
@@ -34,7 +27,6 @@ import { Type_Chat, Type_RoomAll, Type_user } from "../_services/interface";
 import {
     chatBot,
     convertToTanggalIndonesia,
-    createRandomString,
     envVar,
     getLastChat,
     getMongoDateNow,
@@ -46,6 +38,7 @@ import {
 import { useMessages } from "next-intl";
 
 export default function ChatApp() {
+    /* eslint-disable @typescript-eslint/no-explicit-any */
     const messages = useMessages();
     const [open, setOpen] = useState(false);
     const [activeRoom, setActiveRoom] = useState<string | null>(null);
@@ -85,7 +78,7 @@ export default function ChatApp() {
 
     useEffect(() => {
         ws.current = new WebSocket(envVar.websocketURL);
-        ws.current.onerror = (e) => {
+        ws.current.onerror = () => {
             setWsConnected(2);
             ws.current = null;
         };
@@ -289,6 +282,7 @@ export default function ChatApp() {
                 sendWs.unsubscribe(ws.current!, setWsPending, r._id);
             });
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -820,6 +814,7 @@ function ItemRoomList({
                 } else return r;
             }),
         );
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [room.chats]);
 
     return (

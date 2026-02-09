@@ -59,6 +59,8 @@ export async function setCredentials(email: string, sandi: string) {
     const cred = btoa(`${email};${sandi}`);
     (await cookies()).set("Y3JlZGVudGlhbHM", cred);
 }
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export async function reLogin(
     statusCode: number,
     executeFunc: any,

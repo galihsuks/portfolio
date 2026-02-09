@@ -3,7 +3,6 @@ import {
     Type_Chat,
     Type_GroupedChat,
     Type_RoomAll,
-    Type_user,
 } from "./interface";
 
 export const envVar = {
@@ -13,6 +12,7 @@ export const envVar = {
     websocketURL: process.env.NEXT_PUBLIC_WS ?? "",
 };
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export function delay(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
@@ -110,13 +110,13 @@ export function convertToTanggalIndonesia(
         year: "numeric",
     };
 
-    const optFull: Intl.DateTimeFormatOptions = {
-        timeZone: timezone,
-        weekday: "long",
-        day: "2-digit",
-        month: "long",
-        year: "numeric",
-    };
+    // const optFull: Intl.DateTimeFormatOptions = {
+    //     timeZone: timezone,
+    //     weekday: "long",
+    //     day: "2-digit",
+    //     month: "long",
+    //     year: "numeric",
+    // };
 
     const optTime: Intl.DateTimeFormatOptions = {
         timeZone: timezone,
@@ -504,11 +504,11 @@ export const sendWs = {
 export const getLastChat = (
     chatsRoom: { tanggal: string; chats: Type_Chat[] }[],
 ) => {
-    console.log("ini di get last chat");
-    console.log(chatsRoom);
     if (chatsRoom.length > 0 && chatsRoom[0].tanggal) {
         return chatsRoom[chatsRoom.length - 1].chats[
             chatsRoom[chatsRoom.length - 1].chats.length - 1
         ];
     } else return null;
 };
+
+export const getChatUnread = () => {};
