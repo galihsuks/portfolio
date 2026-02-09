@@ -12,6 +12,26 @@ import {
 } from "./interface";
 import { envVar } from "./utils";
 
+export async function loginId(id: string) {
+    const timestamp = Date.now();
+    const param = btoa(`${timestamp};${id}`);
+    const fetching = await fetch(`${envVar.backendURL}/auth/login/${param}`, {
+        method: "GET",
+        headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+        },
+    });
+    const response = await fetching.json();
+    if (fetching.status == 200) {
+        (await cookies()).set("token", response.token);
+    }
+    return {
+        status: fetching.status,
+        data: response as Type_ApiLoginRes,
+    };
+}
+
 export async function login(email: string, sandi: string) {
     const fetching = await fetch(`${envVar.backendURL}/auth/login`, {
         method: "POST",
@@ -135,6 +155,43 @@ export async function getMe() {
     })) as {
         status: number;
         data: Type_ApiMeRes;
+    };
+    return checkStatus;
+}
+
+export async function getUserOne({
+    nama = "",
+    email = "",
+}: {
+    nama?: string;
+    email?: string;
+}) {
+    const fetching = await fetch(`${envVar.backendURL}/user/one`, {
+        method: "POST",
+        headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ nama, email }),
+    });
+    const response = await fetching.json();
+    const checkStatus = (await reLogin(fetching.status, getMe, {
+        status: fetching.status,
+        data: response,
+    })) as {
+        status: number;
+        data: {
+            online: {
+                status: boolean;
+                last: string;
+            };
+            email: string;
+            nama: string;
+            createdAt: string;
+            updatedAt: string;
+            pesan: string;
+            _id: string;
+        };
     };
     return checkStatus;
 }

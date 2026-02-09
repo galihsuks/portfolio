@@ -157,6 +157,7 @@
         "opening": "Hai!👋 Tuliskan nama kamu agar Galih bisa memanggilmu!",
         "text_1": "Hai",
         "text_2": "Tulis pesan untuk Galih",
+        "already_visit": "Kamu sudah pernah chat Galih, kan? ya/tidak",
         "wrong_password": "Password salah! Silahkan input kembali passwordnya"
     },
     "lang": {

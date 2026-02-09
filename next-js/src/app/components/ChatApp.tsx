@@ -15,7 +15,9 @@ import {
     getMe,
     getRoomAll,
     getRoomIdGalih,
+    getUserOne,
     login,
+    loginId,
     logout,
     postChat,
     postRoom,
@@ -48,6 +50,7 @@ export default function ChatApp() {
     const [loading, setLoading] = useState("");
     const [error, setError] = useState("");
     const [messageInput, setMessageInput] = useState("");
+    const inputRef = useRef<HTMLInputElement | null>(null);
     const passwordInput = useRef(false);
     const [roomOpend, setRoomOpened] = useState<string[]>([]);
     const idUser = useRef<{ _id: string; email: string; nama: string } | null>(
@@ -63,6 +66,7 @@ export default function ChatApp() {
     const roomsRef = useRef<Type_RoomAll[]>([]);
     const activeRoomRef = useRef<string | null>(null);
     const activeRoomObjectRef = useRef<Type_RoomAll | null>(null);
+    const userOne = useRef<Type_user | null>(null);
 
     useEffect(() => {
         roomsRef.current = rooms;
@@ -91,8 +95,6 @@ export default function ChatApp() {
         };
         ws.current.onmessage = (event) => {
             const parsed = JSON.parse(event.data);
-            console.log("on message web sccoket");
-            console.log(parsed);
             const {
                 tipe,
                 data,
@@ -258,7 +260,6 @@ export default function ChatApp() {
                         chats: chatsGrouped,
                     },
                 ]);
-                console.log("Harusnya udah di set roomnya");
                 sendWs.subscribe(ws.current!, setWsPending, roomIdGalih ?? "");
                 sendWs.seen(
                     ws.current!,
@@ -287,6 +288,7 @@ export default function ChatApp() {
 
     useEffect(() => {
         setScrollTrigger((prev) => !prev);
+        inputRef.current?.focus();
     }, [open]);
 
     const selectRoom = async (id: string) => {
@@ -331,6 +333,7 @@ export default function ChatApp() {
                     }),
                 );
             }
+            inputRef.current?.focus();
             return;
         }
         setLoading("Fetching chats..");
@@ -354,6 +357,7 @@ export default function ChatApp() {
         );
         setRoomOpened((prev) => [...prev, id]);
         setActiveRoom(id);
+        inputRef.current?.focus();
     };
 
     const onSending = async (e: SyntheticEvent) => {
@@ -382,6 +386,42 @@ export default function ChatApp() {
             window.location.reload();
             return;
         }
+
+        if (userOne.current) {
+            if (
+                messageInputLocal.toLowerCase() == "ya" ||
+                messageInputLocal.toLowerCase() == "yes"
+            ) {
+                await loginId(userOne.current._id);
+                idUser.current = {
+                    _id: userOne.current._id,
+                    email: userOne.current.email,
+                    nama: userOne.current.nama,
+                };
+                sendWs.online(ws.current!, setWsPending, userOne.current._id);
+            } else if (
+                messageInputLocal.toLowerCase() == "tidak" ||
+                messageInputLocal.toLowerCase() == "no"
+            ) {
+                const password = "123456";
+                await signup(
+                    userOne.current.email,
+                    userOne.current.nama,
+                    password,
+                );
+                const responseLogin = await login(
+                    userOne.current.email,
+                    password,
+                );
+                idUser.current = {
+                    _id: responseLogin.data.id,
+                    email: responseLogin.data.email,
+                    nama: responseLogin.data.nama,
+                };
+                sendWs.online(ws.current!, setWsPending, responseLogin.data.id);
+            }
+        }
+
         if (activeRoom == "INIT") {
             if (messageInputLocal.toLowerCase() == "galih sukmamukti") {
                 const chatsInit = chatBot(
@@ -392,31 +432,90 @@ export default function ChatApp() {
                 ) as Type_Chat;
                 addChat(chatsInit, activeRoom, getYmdNow());
                 passwordInput.current = true;
+                inputRef.current?.focus();
                 return;
             }
-            setLoading("Redirect to realtime chat..");
+
             const email = `${messageInputLocal.replace(/[^a-zA-Z0-9]/g, "")}${Date.now()}@galihsuks.com`;
             const nama = messageInputLocal.replace(/[^a-zA-Z0-9 ]/g, "");
-            const password = "123456";
-            await signup(email, nama, password);
-            const responseLogin = await login(email, password);
-            idUser.current = {
-                _id: responseLogin.data.id,
-                email: responseLogin.data.email,
-                nama: responseLogin.data.nama,
-            };
-            sendWs.online(ws.current!, setWsPending, responseLogin.data.id);
-            const newRoom = await postRoom(
+
+            if (!userOne.current) {
+                setLoading("Search user..");
+                const userOneLocal = await getUserOne({ email, nama });
+                if (userOneLocal.status == 200) {
+                    userOne.current = {
+                        ...userOneLocal.data,
+                        email,
+                        nama,
+                    };
+                    const chatsInit = chatBot(
+                        "",
+                        5,
+                        messages.chatbot,
+                        "",
+                    ) as Type_Chat;
+                    addChat(chatsInit, activeRoom, getYmdNow());
+                    setLoading("");
+                    inputRef.current?.focus();
+                    return;
+                }
+
+                setLoading("Redirect to realtime chat..");
+                const password = "123456";
+                await signup(email, nama, password);
+                const responseLogin = await login(email, password);
+                idUser.current = {
+                    _id: responseLogin.data.id,
+                    email: responseLogin.data.email,
+                    nama: responseLogin.data.nama,
+                };
+                sendWs.online(ws.current!, setWsPending, responseLogin.data.id);
+            }
+
+            let newRoom = await postRoom(
                 "private",
                 ["galih8.4.2001@gmail.com"],
                 "",
             );
-            sendWs.subscribe(ws.current!, setWsPending, newRoom.data._id);
-            await setRoomIdGalih(newRoom.data._id);
-            const fetchingNewRoom = await getChatsByRoomId(newRoom.data._id);
+            let idRoomNew = newRoom.data._id;
+            let isAlreadyChat = false;
+            if (newRoom.status == 201) {
+                isAlreadyChat = true;
+                const roomAll = await getRoomAll();
+                if (Array.isArray(roomAll.data)) {
+                    const roomGalih = roomAll.data.find(
+                        (a) => a.nama === "Galih Sukmamukti",
+                    );
+                    idRoomNew = roomGalih?._id ?? "";
+                }
+            }
+            sendWs.subscribe(ws.current!, setWsPending, idRoomNew);
+            await setRoomIdGalih(idRoomNew);
+
+            if (isAlreadyChat) {
+                setLoading("Fetching chats..");
+                const roomDetails = await getChatsByRoomId(idRoomNew);
+                const chatsGrouped = groupChatsByDate(
+                    roomDetails.data.room.chats,
+                );
+                setRooms([
+                    {
+                        ...roomDetails.data.room,
+                        chats: chatsGrouped,
+                    },
+                ]);
+                sendWs.subscribe(ws.current!, setWsPending, idRoomNew);
+                sendWs.seen(ws.current!, setWsPending, idRoomNew, chatsGrouped);
+                setActiveRoom(roomDetails.data.room._id);
+                setLoading("");
+                inputRef.current?.focus();
+                return;
+            }
+
+            const fetchingNewRoom = await getChatsByRoomId(idRoomNew);
             // TODO socket add room
             const chatsInit = chatBot(
-                nama,
+                userOne.current?.nama ?? nama,
                 2,
                 messages.chatbot,
                 "",
@@ -434,6 +533,7 @@ export default function ChatApp() {
             ]);
             setActiveRoom(fetchingNewRoom.data.room._id);
             setLoading("");
+            inputRef.current?.focus();
             return;
         }
 
@@ -469,6 +569,7 @@ export default function ChatApp() {
             );
             setScrollTrigger((prev) => !prev);
         }
+        inputRef.current?.focus();
     };
 
     const addChat = (
@@ -700,6 +801,7 @@ export default function ChatApp() {
                                     <form onSubmit={onSending}>
                                         <div className="flex items-center gap-2 border-t border-white/10 px-3 py-2">
                                             <input
+                                                ref={inputRef}
                                                 value={messageInput}
                                                 onChange={(e) => {
                                                     setMessageInput(

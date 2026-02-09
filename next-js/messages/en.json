@@ -159,6 +159,7 @@
         "opening": "Hi!👋 Tell your name so Galih can call you!",
         "text_1": "Hi",
         "text_2": "Write a message for Galih",
+        "already_visit": "You've chatted with Galih, right? yes/no",
         "wrong_password": "Wrong password! Please re-enter the password"
     },
     "lang": {

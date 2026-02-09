@@ -207,6 +207,7 @@ export function chatBot(
         opening: string;
         text_1: string;
         text_2: string;
+        already_visit: string;
     },
     error: string,
 ) {
@@ -319,7 +320,30 @@ export function chatBot(
                 },
                 seenUsers: [
                     {
-                        timestamp: "2026-02-04T08:32:35.704Z",
+                        timestamp: waktu,
+                        user: {
+                            _id: "6981ac566e0d5d6ecef90484",
+                            email: "galih8.4.2001@gmail.com",
+                            nama: "Galih Sukmamukti",
+                        },
+                        _id: "69830423e6f1e367d0d2a318",
+                    },
+                ],
+                createdAt: waktu,
+                updatedAt: waktu,
+            };
+        case 5:
+            return {
+                _id: "INITCHAT5",
+                pesan: locale.already_visit,
+                idPengirim: {
+                    _id: "6981ac566e0d5d6ecef90484",
+                    email: "galih8.4.2001@gmail.com",
+                    nama: "Galih Sukmamukti",
+                },
+                seenUsers: [
+                    {
+                        timestamp: waktu,
                         user: {
                             _id: "6981ac566e0d5d6ecef90484",
                             email: "galih8.4.2001@gmail.com",
