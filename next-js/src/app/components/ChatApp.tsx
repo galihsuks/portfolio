@@ -153,6 +153,20 @@ export default function ChatApp() {
                                     data.chatAdd.createdAt,
                                 ).tglBlnTahun_number_dash_reverse,
                             );
+                            setRooms((prev) =>
+                                prev.map((r) => {
+                                    if (r._id == data.room_id) {
+                                        return {
+                                            ...r,
+                                            chatsUnread:
+                                                activeRoomRef.current ==
+                                                data.room_id
+                                                    ? r.chatsUnread
+                                                    : r.chatsUnread + 1,
+                                        };
+                                    } else return r;
+                                }),
+                            );
                             if (activeRoomRef.current == data.room_id) {
                                 (async () => {
                                     const resSeen = await seenChat(
@@ -193,6 +207,9 @@ export default function ChatApp() {
                                 })();
                             }
                             setScrollTrigger((prev) => !prev);
+                            break;
+                        case "room-add":
+                            setRooms((prev) => [...prev, data.room]);
                             break;
                         default:
                             break;
@@ -281,6 +298,16 @@ export default function ChatApp() {
     const selectRoom = async (id: string) => {
         if (roomOpend.includes(id)) {
             const findRoom = roomsRef.current.find((e) => e._id == id);
+            setRooms((prev) =>
+                prev.map((r) => {
+                    if (r._id == id) {
+                        return {
+                            ...r,
+                            chatsUnread: 0,
+                        };
+                    } else return r;
+                }),
+            );
             if (findRoom) {
                 setActiveRoom(id);
                 const resSeen = await seenChat(id);
@@ -400,7 +427,17 @@ export default function ChatApp() {
                 messages.chatbot,
                 "",
             ) as Type_Chat;
-            addChat(chatsInit, activeRoom, getYmdNow());
+            setRooms([
+                {
+                    ...fetchingNewRoom.data.room,
+                    chats: [
+                        {
+                            tanggal: getYmdNow(),
+                            chats: [chatsInit],
+                        },
+                    ],
+                },
+            ]);
             setActiveRoom(fetchingNewRoom.data.room._id);
             setLoading("");
             return;
@@ -825,7 +862,7 @@ function ItemRoomList({
                     <div className={`flex flex-col items-end`}>
                         <p
                             style={{ fontSize: "10px" }}
-                            className={`text-xs mb-1 ${room.lastchat.seenUsers.find((u) => u.user._id == idUser) ? "opacity-50" : "text-pink-300 font-semibold"}`}
+                            className={`text-xs mb-1 ${room.chatsUnread == 0 ? "opacity-50" : "text-pink-300 font-semibold"}`}
                         >
                             {
                                 convertToTanggalIndonesia(
@@ -833,9 +870,7 @@ function ItemRoomList({
                                 ).smart_display
                             }
                         </p>
-                        {!room.lastchat.seenUsers.find(
-                            (u) => u.user._id == idUser,
-                        ) && (
+                        {room.chatsUnread > 0 && (
                             <div
                                 style={{ fontSize: "10px" }}
                                 className="rounded-full bg-pink-200 font-semibold text-pink-900 text-xs px-2 py-1"

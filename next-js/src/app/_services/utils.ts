@@ -2,6 +2,7 @@ import {
     DateFormats,
     Type_Chat,
     Type_GroupedChat,
+    Type_RoomAll,
     Type_user,
 } from "./interface";
 
@@ -476,6 +477,20 @@ export const sendWs = {
                 jenis: "chat-add",
                 room_id,
                 chatAdd,
+            },
+        };
+        if (ws && ws.readyState === WebSocket.OPEN) {
+            ws.send(JSON.stringify(dataJson));
+        } else {
+            setState((prev: any) => [...prev, dataJson]);
+        }
+    },
+    addRoom: (ws: WebSocket, setState: any, room: Type_RoomAll) => {
+        const dataJson = {
+            tipe: "send",
+            data: {
+                jenis: "room-add",
+                room,
             },
         };
         if (ws && ws.readyState === WebSocket.OPEN) {
