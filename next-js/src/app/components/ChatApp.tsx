@@ -63,6 +63,7 @@ export default function ChatApp() {
     const [wsConnected, setWsConnected] = useState(0); // 0: conecting, 1 : connected, 2 : disconnect
     const ws = useRef<WebSocket | null>(null);
     const [wsPending, setWsPending] = useState<any[]>([]);
+    const wsPendingRef = useRef<any[]>([]);
     const roomsRef = useRef<Type_RoomAll[]>([]);
     const activeRoomRef = useRef<string | null>(null);
     const activeRoomObjectRef = useRef<Type_RoomAll | null>(null);
@@ -71,6 +72,10 @@ export default function ChatApp() {
     useEffect(() => {
         roomsRef.current = rooms;
     }, [rooms]);
+
+    useEffect(() => {
+        wsPendingRef.current = wsPending;
+    }, [wsPending]);
 
     useEffect(() => {
         activeRoomRef.current = activeRoom;
@@ -88,7 +93,7 @@ export default function ChatApp() {
         };
         ws.current.onopen = () => {
             setWsConnected(1);
-            wsPending.forEach((e) => {
+            wsPendingRef.current.forEach((e) => {
                 ws.current?.send(JSON.stringify(e));
             });
             setWsPending([]);
