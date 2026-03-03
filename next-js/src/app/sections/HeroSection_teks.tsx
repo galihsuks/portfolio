@@ -47,7 +47,7 @@ export default function HeroSectionTeks() {
 
     return (
         <>
-            <p className="text-xs md:text-sm">{teks} Developer</p>
+            <p className="text-xs md:text-sm">{teks} Developer Anjay</p>
         </>
     );
 }
