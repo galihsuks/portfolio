@@ -1,0 +1,170 @@
+{
+    "hero": {
+        "greet": "I'm",
+        "cta_cv": "View My Resume",
+        "cv_link": "https://drive.google.com/file/d/1qRNUVu0kVeAFEHCljS2KVCWFmFpkWmrf/view?usp=sharing",
+        "cta_hire": "Hire Me!",
+        "description": "I graduated from the Sepuluh Nopember Institute of Technology, specializing in Full Stack Developer. I have three years of professional experience. I have worked on various application development projects, including building an enterprise e-commerce platform from scratch. I currently work at an autonomous company in Jakarta, where I continue to hone my skills in designing, developing, and optimizing end-to-end technology solutions. I am ready to bring my technical expertise and creativity to deliver the best solution for your next project!"
+    },
+    "ability": {
+        "title": "What can I do?",
+        "subtitle": "I can work as a frontend or backend developer using the following tools —",
+        "extra_skills": [
+            "Midtrans integration",
+            "WordPress",
+            "WebSocket creation and implementation",
+            "Work individually and in a team"
+        ]
+    },
+    "navbar": {
+        "list": [
+            { "name": "Who Am I", "href": "#hero-section" },
+            { "name": "Ability", "href": "#ability-section" },
+            { "name": "Experience", "href": "#work-section" },
+            { "name": "Projects", "href": "#project-section" },
+            { "name": "Contact Me", "href": "#contact-section" }
+        ],
+        "cta_cv": "My Resume",
+        "cv_link": "https://drive.google.com/file/d/1qRNUVu0kVeAFEHCljS2KVCWFmFpkWmrf/view?usp=sharing"
+    },
+    "workflow": {
+        "title": "My Experiences",
+        "description": "I am a full stack developer from Klaten, Central Java with 3 years of experience in multiple companies",
+        "cta": "View Company",
+        "list": [
+            {
+                "title": "Indosat Ooredoo Hutchison",
+                "badge": "Internship",
+                "date": "April 18, 2022 - June 22, 2022",
+                "description": "The highlight of the Bangkit program was a valuable internship opportunity I undertook at Indosat Ooredoo Hutchison. During this internship, I was actively involved in the team responsible for developing a chat application. Collaborating with my teammates allowed me to contribute to various aspects of the development. Within this context, my role primarily focused on API development and Cloud Storage management using the Google Cloud Platform.",
+                "link": "https://ioh.co.id/portal/id/iohindex",
+                "image": "https://asset.kompas.com/crops/HrxgpCZqgjizsyvSTwfljhoslRM=/0x0:1000x667/1200x800/data/photo/2024/04/30/6630ecd34ca86.jpg"
+            },
+            {
+                "title": "CV. Catur Bhakti Mandiri",
+                "badge": "Full Time",
+                "date": "October 2023 - June 2025",
+                "description": "I work full-time at CV. Catur Bhakti Mandiri. During my time there, I've developed two large e-commerce sites: Lunarea and Ilena. I used the CodeIgniter framework and integrated the payment system through Midtrans.",
+                "link": "https://caturbhaktimandiri.com",
+                "image": "/img/cbm.png"
+            },
+            {
+                "title": "PT. Nusapala Berkah Autonomous",
+                "badge": "Full Time",
+                "date": "June 2025 - Now",
+                "description": "I currently work at PT. Nusapala Berkah Autonomous as a Full Stack Developer. In this role, I was entrusted with the company's largest project, Asta Parking, built using Laravel. During my work on the project, I successfully added various new features and performed bug fixes according to the company's client's needs and requests, thereby improving the overall system quality and performance.",
+                "link": "https://nusapalaberkahautonomous.com",
+                "image": "https://nusapalagroup.com/wp-content/uploads/2021/06/VIEW-11-1000x1000-1.jpg"
+            }
+        ]
+    },
+    "projects": {
+        "title": "My Projects",
+        "subtitle": "A collection of my latest work — built with various technologies and frameworks",
+        "created_in": "Created in",
+        "modal_login": {
+            "label": "Login account",
+            "cta_next": "Next",
+            "cta_cancel": "Cancel"
+        },
+        "projects": [
+            {
+                "name": "LUNAREA Furniture",
+                "created_in": "2023 - 2025",
+                "badge": "E-Commerce",
+                "icon": "shop",
+                "list": [
+                    "Codeigniter as the main framework",
+                    "React Native for UIs that require complex DOMs",
+                    "Midtrans integration",
+                    "Used MySQL to store various data",
+                    "User role implementation"
+                ],
+                "link": "https://lunareafurniture.com/",
+                "image": "/img/lunarea.jpg"
+            },
+            {
+                "name": "ILENA Furniture",
+                "created_in": "2023 - 2025",
+                "badge": "E-Commerce",
+                "icon": "shop",
+                "list": [
+                    "Codeigniter as the main framework",
+                    "React Native for UIs that require complex DOMs",
+                    "Midtrans integration",
+                    "Used MySQL to store various data",
+                    "User role implementation"
+                ],
+                "link": "https://ilenafurniture.com/",
+                "image": "/img/ilena.jpg"
+            },
+            {
+                "name": "IOTKU",
+                "created_in": "2024 - NOW",
+                "badge": "IOT Apps",
+                "icon": "iot",
+                "list": [
+                    "The frontend framework used is NextJS",
+                    "ExpressJS as the backend framework",
+                    "MySQL as the database",
+                    "WebSocket implementation",
+                    "Tailwind as the CSS framework"
+                ],
+                "link": "https://iotku.org/",
+                "account_login": {
+                    "email": "galih8.4.2001@gmail.com",
+                    "password": "123456"
+                },
+                "image": "/img/iotku.jpg"
+            },
+            {
+                "name": "OMONG",
+                "created_in": "2024",
+                "badge": "Chat Apps",
+                "icon": "chat",
+
+                "list": [
+                    "NextJS as the frontend framework",
+                    "ExpressJS as the backend framework",
+                    "WebSocket implementation",
+                    "MongoDB database",
+                    "Tailwind as the CSS framework"
+                ],
+                "link": "https://omong.galihsuks.com/",
+                "image": "/img/omong.jpg"
+            },
+            {
+                "name": "DEAKOR",
+                "created_in": "2022",
+                "badge": "Education",
+                "icon": "education",
+
+                "list": [
+                    "ReactJS for the frontend framework",
+                    "Firebase for the backend services, namely Firestore and App Hosting"
+                ],
+                "link": "https://tugasakhir-ku.web.app/",
+                "account_login": {
+                    "email": "galih@gmail.com",
+                    "password": "12345678"
+                },
+                "image": "/img/TA.jpeg"
+            }
+        ]
+    },
+    "contact": {
+        "title": "Get In Touch",
+        "subtitle_1": "Let's discuss with me —",
+        "subtitle_2": "and get the best service from me!"
+    },
+    "chatbot": {
+        "opening": "Hi!👋 Tell your name so Galih can call you!",
+        "text_1": "Hi",
+        "text_2": "Write a message for Galih",
+        "already_visit": "You've chatted with Galih, right? yes/no",
+        "wrong_password": "Wrong password! Please re-enter the password"
+    },
+    "lang": {
+        "code": "en"
+    }
+}
