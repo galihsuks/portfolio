@@ -1,42 +1,93 @@
+"use client";
 import { create } from "zustand";
+import { getOnlineUsersApi, OnlineUser } from "../../_services/api/user.api";
 
-type OnlineMemberState = {
-    onlineIds: string[];
-    lastSeen: Record<string, string>;
-    hydrateFromApi: (
-        members: Array<{ _id: string; isOnline: boolean; lastSeen: string | null }>,
-    ) => void;
-    syncFromOnlineIds: (ids: string[]) => void;
-    isOnlineById: (id: string) => boolean;
-    getLastSeenById: (id: string) => string | null;
+type OnlineMembersState = {
+    members: OnlineUser[];
+    syncFromOnlineIds: (onlineIds: string[]) => Promise<void>;
+    isOnlineById: (userId?: string | null) => boolean;
+    getLastSeenById: (userId?: string | null) => string | null;
 };
 
-export const useOnlineMembersStore = create<OnlineMemberState>((set, get) => ({
-    onlineIds: [],
-    lastSeen: {},
-    hydrateFromApi: (members) => {
-        const onlineIds = members
-            .filter((m) => m.isOnline)
-            .map((m) => m._id)
-            .filter(Boolean);
-        const lastSeen: Record<string, string> = { ...get().lastSeen };
-        members.forEach((m) => {
-            if (m.lastSeen) lastSeen[m._id] = m.lastSeen;
-        });
-        set({ onlineIds: Array.from(new Set(onlineIds)), lastSeen });
-    },
-    syncFromOnlineIds: (ids) => {
-        const unique = Array.from(new Set(ids.filter(Boolean)));
-        const nowIso = new Date().toISOString();
-        const prev = get().onlineIds;
-        const nextLastSeen = { ...get().lastSeen };
-        prev.forEach((id) => {
-            if (!unique.includes(id) && !nextLastSeen[id]) {
-                nextLastSeen[id] = nowIso;
+export const useOnlineMembersStore = create<OnlineMembersState>((set, get) => ({
+    members: [],
+    syncFromOnlineIds: async (onlineIds) => {
+        const now = new Date().toISOString();
+        const current = get().members;
+        const currentMap = new Map(
+            current.map((member) => [member._id, member]),
+        );
+        const onlineSet = new Set(onlineIds);
+
+        const newIds = onlineIds.filter((id) => !currentMap.has(id));
+        let fetchedNewMembers: OnlineUser[] = [];
+        if (newIds.length) {
+            try {
+                fetchedNewMembers = await getOnlineUsersApi(newIds);
+            } catch {
+                fetchedNewMembers = newIds.map((id) => ({
+                    _id: id,
+                    isOnline: true,
+                    lastSeen: now,
+                }));
             }
+        }
+
+        const fetchedMap = new Map(
+            fetchedNewMembers.map((member) => [member._id, member]),
+        );
+        const allIds = new Set<string>([
+            ...current.map((member) => member._id),
+            ...onlineIds,
+            ...fetchedNewMembers.map((member) => member._id),
+        ]);
+
+        const nextMembers: OnlineUser[] = Array.from(allIds).map((id) => {
+            const existing = currentMap.get(id);
+            const fetched = fetchedMap.get(id);
+            const isOnline = onlineSet.has(id);
+
+            if (!existing && fetched) {
+                return {
+                    _id: id,
+                    isOnline,
+                    lastSeen: isOnline ? now : fetched.lastSeen,
+                };
+            }
+
+            if (!existing) {
+                return {
+                    _id: id,
+                    isOnline,
+                    lastSeen: now,
+                };
+            }
+
+            if (existing.isOnline && !isOnline) {
+                return { ...existing, isOnline: false, lastSeen: now };
+            }
+
+            if (!existing.isOnline && isOnline) {
+                return { ...existing, isOnline: true };
+            }
+
+            return existing;
         });
-        set({ onlineIds: unique, lastSeen: nextLastSeen });
+
+        set({ members: nextMembers });
     },
-    isOnlineById: (id) => get().onlineIds.includes(id),
-    getLastSeenById: (id) => get().lastSeen[id] ?? null,
+    isOnlineById: (userId) => {
+        if (!userId) return false;
+        return (
+            get().members.find((member) => member._id === userId)?.isOnline ??
+            false
+        );
+    },
+    getLastSeenById: (userId) => {
+        if (!userId) return null;
+        return (
+            get().members.find((member) => member._id === userId)?.lastSeen ??
+            null
+        );
+    },
 }));
