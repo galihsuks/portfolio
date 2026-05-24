@@ -9,6 +9,10 @@ export default function LenisScroll() {
             duration: 1.2,
             smoothWheel: true,
             anchors: true,
+            prevent: (node) => {
+                if (!(node instanceof HTMLElement)) return false;
+                return Boolean(node.closest("[data-lenis-prevent]"));
+            },
         });
 
         const raf = (time: number) => {

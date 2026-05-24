@@ -1,133 +1,140 @@
 "use client";
+import { Check, CheckCheck, Clock12 } from "lucide-react";
+import { useMemo, useState } from "react";
+import { Chat } from "../chat/types/domain";
+import { formatDateTimeByTimeZone, formatTimeByTimeZone } from "../chat/utils/dateTime";
 
-import { CheckCheckIcon, CheckIcon, Clock6Icon } from "lucide-react";
-import { convertToTanggalIndonesia } from "../_services/utils";
-import { Type_user } from "../_services/interface";
+type Props = {
+  chat: Chat;
+  isMine: boolean;
+  currentUserName?: string;
+  timeZone?: string;
+  onReply: (chat: Chat) => void;
+  onDelete: (chatId: string) => void;
+};
 
-export default function BubbleChat({
-    _id,
-    pesan,
-    reply,
-    seen = [],
-    time,
-    mine,
-    pendingChat,
-    anggotaGroup,
-    onReply,
-    onDelete,
-    canDelete = false,
-    senderName,
-}: {
-    _id: string;
-    pesan: string;
-    reply: null | {
-        pesan: string;
-        idPengirim: {
-            nama: string;
-        };
-    };
-    anggotaGroup: {
-        online: {
-            status: boolean;
-            last: string;
-        };
-        _id: string;
-        email: string;
-        nama: string;
-    }[];
-    seen?: {
-        timestamp: string;
-        user: Type_user;
-        _id: string;
-    }[];
-    time: string;
-    mine: boolean;
-    pendingChat: string[];
-    onReply?: () => void;
-    onDelete?: () => void;
-    canDelete?: boolean;
-    senderName?: string;
-}) {
-    const totalReadersTarget = Math.max(anggotaGroup.length - 1, 0);
-    const seenByOthers = Math.max(seen.length - 1, 0);
-    const hasAnyReader = seenByOthers > 0;
-    const hasAllReaders =
-        totalReadersTarget > 0 && seenByOthers >= totalReadersTarget;
+export default function ChatBubble({
+  chat,
+  isMine,
+  currentUserName,
+  timeZone,
+  onReply,
+  onDelete,
+}: Props) {
+  const [showReaders, setShowReaders] = useState(false);
+  const readers = useMemo(
+    () =>
+      (chat.seenUsers ?? []).filter((item) => {
+        const readerName = item.namaUser;
+        return Boolean(readerName) && readerName !== currentUserName;
+      }),
+    [chat.seenUsers, currentUserName],
+  );
+  const totalReadersTarget = Math.max(chat.totalReadersTarget ?? 0, 0);
+  const hasAnyReader = readers.length > 0;
+  const hasAllReaders = totalReadersTarget > 0 && readers.length >= totalReadersTarget;
+  const readLabel = !hasAnyReader ? "Sent" : "Show";
 
-    return (
-        <div
-            className={`flex ${mine ? "justify-end ps-10" : "justify-start pe-10"}`}
-        >
-            <div
-                className={`group relative flex max-w-[85%] flex-col rounded-2xl px-3 py-2 ${mine ? "glass" : "bg-white/10 text-white"}`}
+  return (
+    <div className={`group flex ${isMine ? "justify-end" : "justify-start"}`}>
+      <div
+        className={`max-w-[85%] rounded-2xl px-3 py-2 ${
+          isMine ? "bg-fuchsia-500/30" : "bg-white/10"
+        }`}
+      >
+        {!isMine && <p className="mb-1 text-[10px] text-cyan-300">{chat.pengirim.nama}</p>}
+
+        {chat.reply && (
+          <div className="mb-2 rounded-md border-l-2 border-indigo-300 bg-black/20 px-2 py-1">
+            <p className="text-[10px] text-indigo-200">
+              {chat.reply.namaPengirim === currentUserName ? "You" : chat.reply.namaPengirim}
+            </p>
+            <p className="line-clamp-2 text-xs text-slate-200">{chat.reply.pesan}</p>
+          </div>
+        )}
+
+        <p className="text-xs text-white">{chat.pesan}</p>
+
+        <div className="mt-2 flex items-center gap-2 text-[10px] text-slate-300">
+          <button onClick={() => onReply(chat)} className="hover:text-white">
+            Reply
+          </button>
+          {isMine && (
+            <button onClick={() => onDelete(chat._id)} className="hover:text-rose-300">
+              Delete
+            </button>
+          )}
+          <span className="ml-auto pl-2">{formatTimeByTimeZone(chat.createdAt, timeZone)}</span>
+          {isMine && (
+            <button
+              onClick={() => setShowReaders((prev) => !prev)}
+              className={`inline-flex items-center transition-all duration-300 ease-in-out gap-0 group-hover:gap-1 ${
+                hasAllReaders
+                  ? "text-cyan-300 hover:text-cyan-200"
+                  : "text-white hover:text-slate-200"
+              }`}
+              title={readLabel}
             >
-                {!mine && (
-                    <p className="mb-1 text-[10px] text-cyan-300">
-                        {senderName ?? "User"}
-                    </p>
-                )}
-                {reply && (
-                    <div
-                        className={`${mine ? "bg-black/50" : "bg-black/20"} w-full mb-2 rounded-md border-l-2 border-pink-300 px-2 py-1`}
-                    >
-                        <p
-                            className={`text-xs line-clamp-1 mb-1 font-semibold ${mine ? "text-pink-400" : "text-pink-200"}`}
-                            style={{ fontSize: "10px" }}
-                        >
-                            {reply.idPengirim.nama}
-                        </p>
-                        <p
-                            className={`text-xs line-clamp-1 ${mine ? "text-white" : "text-slate-100"}`}
-                        >
-                            {reply.pesan}
-                        </p>
-                    </div>
-                )}
-                <div className="text-sm">
-                    <p>{pesan}</p>
-                </div>
-                {pendingChat.includes(_id) ? (
-                    <div className="mt-2 flex justify-end">
-                        <Clock6Icon className="size-3 opacity-50" />
-                    </div>
-                ) : (
-                    <div className="mt-2 flex items-center gap-2 text-[10px] text-slate-300">
-                        <button
-                            type="button"
-                            onClick={onReply}
-                            className="hover:text-white"
-                        >
-                            Reply
-                        </button>
-                        {canDelete && onDelete && (
-                            <button
-                                type="button"
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    onDelete();
-                                }}
-                                className="hover:text-rose-300"
-                            >
-                                Delete
-                            </button>
-                        )}
-                        <span className="ml-auto">
-                            {convertToTanggalIndonesia(time).jam_menit}
-                        </span>
-                        {mine && (
-                            <>
-                                {hasAnyReader ? (
-                                    <CheckCheckIcon
-                                        className={`size-3 ${hasAllReaders ? "text-pink-400" : "opacity-80"}`}
-                                    />
-                                ) : (
-                                    <CheckIcon className="size-3 opacity-80" />
-                                )}
-                            </>
-                        )}
-                    </div>
-                )}
-            </div>
+              {!hasAnyReader ? <Check size={12} /> : <CheckCheck size={12} />}
+              <span className="text-nowrap overflow-hidden transition-all duration-300 ease-in-out max-w-[0px] group-hover:max-w-[70px]">
+                {readLabel}
+              </span>
+            </button>
+          )}
         </div>
-    );
+
+        {isMine && showReaders && (
+          <div className="mt-2 rounded-md border border-white/15 bg-black/20 p-2">
+            {readers.length === 0 ? (
+              <p className="text-[10px] text-slate-300">No one has read this message yet.</p>
+            ) : (
+              <div className="space-y-1">
+                {readers.map((item, ind_item) => (
+                  <div key={ind_item} className="flex items-center gap-2">
+                    <p className="truncate text-[10px] font-semibold text-cyan-200">
+                      {item.namaUser}
+                    </p>
+                    <p className="truncate text-[10px] text-slate-300">
+                      {formatDateTimeByTimeZone(item.timestamp, timeZone)}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+type PendingProps = {
+  pesan: string;
+  reply: null | { pesan: string; namaPengirim: string };
+  timeZone?: string;
+  currentUserName?: string;
+};
+export function ChatBubblePending({ pesan, reply, timeZone, currentUserName }: PendingProps) {
+  const createdAt = new Date().toISOString();
+  return (
+    <div className={`group flex justify-end`}>
+      <div className={`max-w-[85%] rounded-2xl px-3 py-2 bg-fuchsia-500/30`}>
+        {reply && (
+          <div className="mb-2 rounded-md border-l-2 border-indigo-300 bg-black/20 px-2 py-1">
+            <p className="text-[10px] text-indigo-200">
+              {reply.namaPengirim === currentUserName ? "You" : reply.namaPengirim}
+            </p>
+            <p className="line-clamp-2 text-xs text-slate-200">{reply.pesan}</p>
+          </div>
+        )}
+        <p className="text-xs text-white">{pesan}</p>
+        <div className="mt-2 flex items-center gap-2 text-[10px] text-slate-300">
+          <span className="ml-auto pl-2">{formatTimeByTimeZone(createdAt, timeZone)}</span>
+          <div>
+            <Clock12 size={12} />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
