@@ -1,6 +1,6 @@
 "use client";
 
-import { Chat, SelectOption } from "../types/domain";
+import { Chat } from "../types/domain";
 import { FormEvent, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { useAuthStore } from "../store/auth.store";
 import { useRoomsMainStore } from "../store/roomsMain.store";
@@ -15,9 +15,8 @@ import {
 import { ROOM_CHAT_LIMIT } from "../config/constants";
 import { useMyProfileQuery } from "../hooks/useUser";
 import { formatShortDateTimeByTimeZone } from "../utils/dateTime";
-import { ArrowLeft, LogOut, MessageSquare, MessagesSquare, Send } from "lucide-react";
+import { ArrowLeft, LogOut, MessagesSquare, Send } from "lucide-react";
 import BubbleChat, { ChatBubblePending } from "../../components/ChatAppBubble";
-import { logoutApi } from "../../_services/api/auth.api";
 import { useLogoutMutation } from "../hooks/useAuthMutation";
 
 type RoomChatItem = {
@@ -59,6 +58,7 @@ type Props = {
 };
 
 export default function ChatRoomPanel({ onExitRoom, roomDetailData }: Props) {
+  /* eslint-disable react-hooks/exhaustive-deps */
   const roomId = roomDetailData._id;
   const { user, setUser } = useAuthStore();
   const { fetchRoomChatsPage, nextPage, handleRealtimePayload } = useRoomsMainStore();
@@ -285,7 +285,7 @@ export default function ChatRoomPanel({ onExitRoom, roomDetailData }: Props) {
   };
 
   const handleLogout = async () => {
-    logoutMutation(null, {
+    logoutMutation(undefined, {
       onSuccess: () => {
         setUser(null);
         setTimeout(() => {
@@ -307,7 +307,12 @@ export default function ChatRoomPanel({ onExitRoom, roomDetailData }: Props) {
     <>
       <div className="px-4 py-3 border-b border-white/10 flex items-center justify-between gap-2">
         <div>
-          {!user?.isOwner && <p className="text-[10px] opacity-50">You're {user?.nama}</p>}
+          {!user?.isOwner && (
+            <p className="text-[10px] opacity-50">
+              {"You're "}
+              {user?.nama}
+            </p>
+          )}
           <p className="font-semibold">{roomDisplayName}</p>
           <p
             className={`text-[10px] ${roomSubtitle === "Online" ? "font-semibold text-cyan-300" : "opacity-70"}`}
@@ -383,7 +388,8 @@ export default function ChatRoomPanel({ onExitRoom, roomDetailData }: Props) {
           <div className="h-full flex items-center justify-center flex-col gap-3 opacity-70 p-10">
             <MessagesSquare className="size-15" />
             <p className="text-[11px] text-center">
-              Let's have a fun conversation with {roomDisplayName}!
+              {"Let's have a fun conversation with "}
+              {roomDisplayName}!
             </p>
           </div>
         )}

@@ -55,18 +55,6 @@ async function backendSignup(email: string, sandi: string, nama: string) {
   return { status: response.status, data: data.data };
 }
 
-async function backendUpdateMyName(token: string, nama: string) {
-  await fetch(`${backendURL}/user`, {
-    method: "PUT",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({ nama }),
-  }).catch(() => undefined);
-}
-
 async function backendCreateRoom(token: string) {
   await fetch(`${backendURL}/room`, {
     method: "POST",
@@ -124,7 +112,7 @@ export async function POST(req: Request) {
   }
 
   let email = found?.email ?? "";
-  let shouldRegister = !email || body.confirmKnown === false;
+  const shouldRegister = !email || body.confirmKnown === false;
 
   if (shouldRegister) {
     const sanitizedName = name.replace(/[^a-zA-Z0-9]+/g, "").toLowerCase() || "guest";

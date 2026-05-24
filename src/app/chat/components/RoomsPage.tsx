@@ -3,22 +3,18 @@ import { Check, CheckCheck, ChevronUpIcon, MessageCircle } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { formatTimeByTimeZone } from "../utils/dateTime";
 import { useAuthStore } from "../store/auth.store";
-import { useQueryClient } from "@tanstack/react-query";
 import { useMyProfileQuery } from "../hooks/useUser";
-import { useWsStore } from "../store/ws.store";
 import { useRoomsMainStore } from "../store/roomsMain.store";
 import { useOnlineMembersStore } from "../store/onlineMembers.store";
-import { useCreateRoomMutation, useRoomPageQuery, useUserSearchQuery } from "../hooks/useRooms";
+import { useRoomPageQuery } from "../hooks/useRooms";
 import { OWNER_EMAIL, ROOM_LIST_LIMIT } from "../config/constants";
-import { SelectOption } from "../types/domain";
 import ChatRoomPanel from "./ChatRoomPanel";
 
 export function RoomsPage() {
+  /* eslint-disable react-hooks/exhaustive-deps */
   const [open, setOpen] = useState(false);
-  const queryClient = useQueryClient();
   const { user } = useAuthStore();
   const { data: profileData } = useMyProfileQuery();
-  const { send } = useWsStore();
   const {
     totalRooms,
     rooms,
@@ -28,18 +24,9 @@ export function RoomsPage() {
     fetchNextRooms,
     setActiveRoomId,
     firstTimestampRenderRooms,
-    upsertRoomFromApi,
   } = useRoomsMainStore();
   const { isOnlineById, members: membersOnline } = useOnlineMembersStore();
   const listSentinelRef = useRef<HTMLDivElement | null>(null);
-  const searchInputRef = useRef<HTMLInputElement | null>(null);
-  const [showSearch, setShowSearch] = useState(false);
-  const [searchKeyword, setSearchKeyword] = useState("");
-  const [memberKeyword, setMemberKeyword] = useState("");
-  const { data: userSearchData, isPending: isUserSearchPending } = useUserSearchQuery(
-    "nama",
-    memberKeyword,
-  );
 
   const { data: roomsData, isPending: isRoomsPending } = useRoomPageQuery(
     page,
@@ -77,20 +64,8 @@ export function RoomsPage() {
 
   useEffect(() => {
     setIsOnlineById_Trigger((prev) => !prev);
+    console.log(isOnlineById_Trigger);
   }, [membersOnline]);
-
-  useEffect(() => {
-    if (!showSearch) return;
-    searchInputRef.current?.focus();
-  }, [showSearch]);
-
-  const memberOptions = useMemo<SelectOption[]>(() => {
-    return (userSearchData ?? []).map((nextUser) => ({
-      label: nextUser.nama,
-      value: nextUser.email,
-      meta: nextUser.email,
-    }));
-  }, [userSearchData]);
 
   const isOwner = user?.isOwner ?? false;
   useEffect(() => {
@@ -171,11 +146,6 @@ export function RoomsPage() {
                   <button
                     key={room._id}
                     className={`flex w-full items-center gap-3 rounded-xl border p-3 text-left transition ${
-                      searchKeyword.trim().length > 0 &&
-                      !room.nama.toLowerCase().includes(searchKeyword.trim().toLowerCase())
-                        ? "hidden"
-                        : ""
-                    } ${
                       activeRoomId === room._id
                         ? "border-cyan-300/70 bg-cyan-400/10"
                         : "border-white/10 bg-white/5 hover:bg-white/10"

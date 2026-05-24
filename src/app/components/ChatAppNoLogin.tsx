@@ -37,7 +37,11 @@ export default function ChatAppNoLogin() {
     setBotLines((prev) => [...prev, { id: crypto.randomUUID(), mine: true, text }]);
   };
 
-  async function finishLogin(payload: { user?: any; token?: string; isOwner?: boolean }) {
+  async function finishLogin(payload: {
+    user?: { id: string; email: string; nama: string };
+    token?: string;
+    isOwner?: boolean;
+  }) {
     if (!payload.user?.id || !payload.token) return;
     setUser({
       id: String(payload.user.id),

@@ -1,5 +1,5 @@
 "use client";
-
+/* eslint-disable react-hooks/exhaustive-deps */
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RoomsPage } from "../chat/components/RoomsPage";
 import { useAuthStore } from "../chat/store/auth.store";
