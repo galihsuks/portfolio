@@ -1,7 +1,7 @@
 "use client";
-import { Check, CheckCheck } from "lucide-react";
+import { Check, CheckCheck, Clock12 } from "lucide-react";
 import { useMemo, useState } from "react";
-import { Chat, UserAuth } from "../chat/types/domain";
+import { Chat } from "../chat/types/domain";
 import { formatDateTimeByTimeZone, formatTimeByTimeZone } from "../chat/utils/dateTime";
 
 type Props = {
@@ -103,6 +103,37 @@ export default function ChatBubble({
             )}
           </div>
         )}
+      </div>
+    </div>
+  );
+}
+
+type PendingProps = {
+  pesan: string;
+  reply: null | { pesan: string; namaPengirim: string };
+  timeZone?: string;
+  currentUserName?: string;
+};
+export function ChatBubblePending({ pesan, reply, timeZone, currentUserName }: PendingProps) {
+  const createdAt = new Date().toISOString();
+  return (
+    <div className={`group flex justify-end`}>
+      <div className={`max-w-[85%] rounded-2xl px-3 py-2 bg-fuchsia-500/30`}>
+        {reply && (
+          <div className="mb-2 rounded-md border-l-2 border-indigo-300 bg-black/20 px-2 py-1">
+            <p className="text-[10px] text-indigo-200">
+              {reply.namaPengirim === currentUserName ? "You" : reply.namaPengirim}
+            </p>
+            <p className="line-clamp-2 text-xs text-slate-200">{reply.pesan}</p>
+          </div>
+        )}
+        <p className="text-xs text-white">{pesan}</p>
+        <div className="mt-2 flex items-center gap-2 text-[10px] text-slate-300">
+          <span className="ml-auto pl-2">{formatTimeByTimeZone(createdAt, timeZone)}</span>
+          <div>
+            <Clock12 size={12} />
+          </div>
+        </div>
       </div>
     </div>
   );

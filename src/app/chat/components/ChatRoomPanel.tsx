@@ -16,7 +16,7 @@ import { ROOM_CHAT_LIMIT } from "../config/constants";
 import { useMyProfileQuery } from "../hooks/useUser";
 import { formatShortDateTimeByTimeZone } from "../utils/dateTime";
 import { ArrowLeft, LogOut, MessageSquare, MessagesSquare, Send } from "lucide-react";
-import BubbleChat from "../../components/ChatAppBubble";
+import BubbleChat, { ChatBubblePending } from "../../components/ChatAppBubble";
 import { logoutApi } from "../../_services/api/auth.api";
 import { useLogoutMutation } from "../hooks/useAuthMutation";
 
@@ -217,7 +217,7 @@ export default function ChatRoomPanel({ onExitRoom, roomDetailData }: Props) {
     if (!container) return;
     if (!shouldAutoScrollRef.current) return;
     container.scrollTop = container.scrollHeight;
-  }, [roomId, chats.length]);
+  }, [roomId, chats.length, isAddChatPending]);
 
   useEffect(() => {
     const node = listSentinelRef.current;
@@ -266,7 +266,6 @@ export default function ChatRoomPanel({ onExitRoom, roomDetailData }: Props) {
     deleteChat(chatId, {
       onSuccess: () => {
         handleRealtimePayload(roomId, { event: "chat", action: "delete", roomId, chatId });
-
         send(roomId, { event: "chat", action: "delete", roomId, chatId });
       },
     });
@@ -367,6 +366,18 @@ export default function ChatRoomPanel({ onExitRoom, roomDetailData }: Props) {
                 onDelete={handleDelete}
               />
             ))}
+            {isAddChatPending && (
+              <ChatBubblePending
+                timeZone={profileData?.timezone}
+                currentUserName={user?.nama}
+                pesan={message}
+                reply={
+                  replyTarget
+                    ? { pesan: replyTarget.pesan, namaPengirim: replyTarget.pengirim.nama }
+                    : null
+                }
+              />
+            )}
           </>
         ) : (
           <div className="h-full flex items-center justify-center flex-col gap-3 opacity-70 p-10">
@@ -400,6 +411,7 @@ export default function ChatRoomPanel({ onExitRoom, roomDetailData }: Props) {
             value={message}
             ref={messageInputRef}
             onChange={(e) => setMessage(e.target.value)}
+            disabled={isAddChatPending}
             placeholder="Write a message"
             className="flex-1 rounded-lg border border-white/10 px-3 py-2 text-sm focus:outline-none"
           />
