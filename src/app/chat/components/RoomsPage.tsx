@@ -9,7 +9,7 @@ import { useWsStore } from "../store/ws.store";
 import { useRoomsMainStore } from "../store/roomsMain.store";
 import { useOnlineMembersStore } from "../store/onlineMembers.store";
 import { useCreateRoomMutation, useRoomPageQuery, useUserSearchQuery } from "../hooks/useRooms";
-import { ROOM_LIST_LIMIT } from "../config/constants";
+import { OWNER_EMAIL, ROOM_LIST_LIMIT } from "../config/constants";
 import { SelectOption } from "../types/domain";
 import ChatRoomPanel from "./ChatRoomPanel";
 
@@ -35,15 +35,7 @@ export function RoomsPage() {
   const searchInputRef = useRef<HTMLInputElement | null>(null);
   const [showSearch, setShowSearch] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState("");
-  const [showCreateRoom, setShowCreateRoom] = useState(false);
-  const [roomType, setRoomType] = useState<"private" | "group">("private");
-  const [roomName, setRoomName] = useState("");
   const [memberKeyword, setMemberKeyword] = useState("");
-  const [selectedMemberValue, setSelectedMemberValue] = useState("");
-  const [selectedMembers, setSelectedMembers] = useState<
-    Array<{ _id: string; nama: string; email: string }>
-  >([]);
-  const { mutate: createRoom, isPending: isCreateRoomPending } = useCreateRoomMutation();
   const { data: userSearchData, isPending: isUserSearchPending } = useUserSearchQuery(
     "nama",
     memberKeyword,
@@ -100,63 +92,32 @@ export function RoomsPage() {
     }));
   }, [userSearchData]);
 
-  const handleCloseCreateRoom = () => {
-    setShowCreateRoom(false);
-    setRoomType("private");
-    setRoomName("");
-    setMemberKeyword("");
-    setSelectedMemberValue("");
-    setSelectedMembers([]);
-  };
-
-  const handleSelectMember = (email: string) => {
-    const selectedUser = (userSearchData ?? []).find((item) => item.email === email);
-    if (!selectedUser) return;
-    setSelectedMemberValue(email);
-    setSelectedMembers((prev) =>
-      prev.some((item) => item.email === email) ? prev : [...prev, selectedUser],
-    );
-  };
-
-  const handleCreateRoom = () => {
-    createRoom(
-      {
-        tipe: roomType,
-        nama: roomType === "group" ? roomName.trim() : undefined,
-        anggota: selectedMembers.map((member) => member.email),
-      },
-      {
-        onSuccess: (room) => {
-          upsertRoomFromApi(room);
-          selectedMembers.forEach((member) => {
-            send(`__user__:${member._id}`, {
-              event: "room",
-              action: "add",
-              roomId: room._id,
-            });
-          });
-          queryClient.invalidateQueries({ queryKey: ["rooms-page"] });
-          console.log("Room created successfully.");
-          handleCloseCreateRoom();
-        },
-        onError: (error) => console.error("error", (error as Error).message),
-      },
-    );
-  };
+  const isOwner = user?.isOwner ?? false;
+  useEffect(() => {
+    if (user && !user.isOwner && rooms.length > 0) {
+      const privateWithOwner = rooms.find(
+        (room) =>
+          room.tipe === "private" &&
+          room.anggota.some((anggota) => anggota.email?.toLowerCase() === OWNER_EMAIL),
+      );
+      if (privateWithOwner?._id) setActiveRoomId(privateWithOwner._id);
+    }
+  }, [user, rooms]);
 
   return (
     <>
-      <button
+      <div
         onClick={() => setOpen((p) => !p)}
-        className={`cursor-pointer fixed z-50 flex bottom-3 md:bottom-6 right-3 md:right-6 ${open ? "h-10 w-10 rotate-180" : "h-14 w-14"} glass items-center justify-center rounded-full`}
+        className={`cursor-pointer transition-all duration-400 fixed z-50 flex bottom-3 md:bottom-6 right-3 md:right-6 ${open ? "h-10 w-10 rotate-180" : "h-14 w-14"} glass items-center justify-center rounded-full backdrop-blur-xs`}
       >
         {open ? <ChevronUpIcon className="h-4 w-4" /> : <MessageCircle className="h-6 w-6" />}
-      </button>
+      </div>
       <div
-        className={`transition-all duration-400 overflow-hidden fixed z-50 flex rounded-xl bg-black/70 border-white/10 backdrop-blur-lg md:bottom-20 md:right-6 bottom-16 right-3 ${open ? "h-[520px] md:w-[900px] w-[95%] border" : "h-[0px] w-[0px]"}`}
+        data-lenis-prevent
+        className={`transition-all duration-400 overflow-hidden fixed z-50 flex rounded-xl bg-black/70 border-white/10 backdrop-blur-lg md:bottom-20 md:right-6 bottom-16 right-3 ${open ? `h-[520px] w-[95%] border ${isOwner ? "md:w-[900px]" : "md:w-[350px]"}` : "h-[0px] w-[0px]"}`}
       >
         <aside
-          className={`${activeRoom ? "hidden md:flex" : "flex"} w-full md:w-[320px] flex-col border-r border-white/10`}
+          className={`${activeRoom ? `hidden ${isOwner ? "md:flex" : ""}` : "flex"} w-full md:w-[320px] min-h-0 flex-col border-r border-white/10`}
         >
           <div className="px-4 py-3 border-b border-white/10">
             <p className="font-semibold">Chat Rooms</p>
@@ -221,15 +182,13 @@ export function RoomsPage() {
                     }`}
                     onClick={() => setActiveRoomId(room._id)}
                   >
-                    <div className="relative flex h-11 w-11 items-center justify-center rounded-full bg-indigo-600/50 text-sm font-bold">
-                      {room.nama.slice(0, 2).toUpperCase()}
-                      {room.tipe === "private" && isOnline && (
-                        <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-slate-900 bg-green-400" />
-                      )}
-                    </div>
-
                     <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-semibold">{room.nama}</p>
+                      <div className="flex items-center gap-2">
+                        <p className="truncate text-sm font-semibold">{room.nama}</p>
+                        {room.tipe === "private" && isOnline && (
+                          <span className="h-2 w-2 rounded-full bg-green-400" />
+                        )}
+                      </div>
                       {typingLabel ? (
                         <p className="truncate text-xs text-cyan-300">{typingLabel}</p>
                       ) : (
@@ -268,11 +227,13 @@ export function RoomsPage() {
             )}
           </div>
         </aside>
-        <section className="flex-1 flex flex-col">
+        <section className="flex-1 min-h-0 flex flex-col">
           {activeRoom ? (
             <ChatRoomPanel onExitRoom={() => setActiveRoomId(null)} roomDetailData={activeRoom} />
           ) : (
-            <p className="text-sm text-slate-300">Select a room to open chat.</p>
+            <div className="h-full flex justify-center items-center p-5">
+              <p className="text-sm text-slate-300">Select a room to open chat.</p>
+            </div>
           )}
         </section>
       </div>

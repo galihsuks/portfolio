@@ -4,6 +4,7 @@ export type UserAuth = {
   nama: string;
   email: string;
   token: string;
+  isOwner: boolean;
 };
 
 export type UserProfile = {

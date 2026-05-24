@@ -1,7 +1,7 @@
 "use client";
 import { Check, CheckCheck } from "lucide-react";
 import { useMemo, useState } from "react";
-import { Chat } from "../chat/types/domain";
+import { Chat, UserAuth } from "../chat/types/domain";
 import { formatDateTimeByTimeZone, formatTimeByTimeZone } from "../chat/utils/dateTime";
 
 type Props = {
@@ -46,12 +46,14 @@ export default function ChatBubble({
 
         {chat.reply && (
           <div className="mb-2 rounded-md border-l-2 border-indigo-300 bg-black/20 px-2 py-1">
-            <p className="text-[10px] text-indigo-200">{chat.reply.namaPengirim}</p>
+            <p className="text-[10px] text-indigo-200">
+              {chat.reply.namaPengirim === currentUserName ? "You" : chat.reply.namaPengirim}
+            </p>
             <p className="line-clamp-2 text-xs text-slate-200">{chat.reply.pesan}</p>
           </div>
         )}
 
-        <p className="text-sm text-white">{chat.pesan}</p>
+        <p className="text-xs text-white">{chat.pesan}</p>
 
         <div className="mt-2 flex items-center gap-2 text-[10px] text-slate-300">
           <button onClick={() => onReply(chat)} className="hover:text-white">

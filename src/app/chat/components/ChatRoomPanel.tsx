@@ -1,14 +1,11 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { Chat, SelectOption } from "../types/domain";
 import { FormEvent, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { useQueryClient } from "@tanstack/react-query";
 import { useAuthStore } from "../store/auth.store";
 import { useRoomsMainStore } from "../store/roomsMain.store";
 import { useWsStore } from "../store/ws.store";
 import { useOnlineMembersStore } from "../store/onlineMembers.store";
-import { useDebouncedValue } from "../hooks/useDebouncedValue";
 import {
   useAddChatMutation,
   useChatPageQuery,
@@ -16,16 +13,12 @@ import {
   useSeenRoomMutation,
 } from "../hooks/useChatMutations";
 import { ROOM_CHAT_LIMIT } from "../config/constants";
-import {
-  useAddMembersToRoomMutation,
-  useExitRoomMutation,
-  useRoomMemberCandidatesQuery,
-  useUpdateRoomMutation,
-} from "../hooks/useRooms";
 import { useMyProfileQuery } from "../hooks/useUser";
 import { formatShortDateTimeByTimeZone } from "../utils/dateTime";
-import { ArrowLeft, LogOut, Send } from "lucide-react";
+import { ArrowLeft, LogOut, MessageSquare, MessagesSquare, Send } from "lucide-react";
 import BubbleChat from "../../components/ChatAppBubble";
+import { logoutApi } from "../../_services/api/auth.api";
+import { useLogoutMutation } from "../hooks/useAuthMutation";
 
 type RoomChatItem = {
   totalReadersTarget: number;
@@ -65,37 +58,16 @@ type Props = {
   roomDetailData: RoomMainItem;
 };
 
-const BOT_USER = {
-  _id: "BOT",
-  email: "galih8.4.2001@gmail.com",
-  nama: "Galih Sukmamukti",
-};
-
 export default function ChatRoomPanel({ onExitRoom, roomDetailData }: Props) {
   const roomId = roomDetailData._id;
-  const navigate = useRouter();
-  const queryClient = useQueryClient();
-  const { user } = useAuthStore();
+  const { user, setUser } = useAuthStore();
   const { fetchRoomChatsPage, nextPage, handleRealtimePayload } = useRoomsMainStore();
   const { send } = useWsStore();
   const { isOnlineById, getLastSeenById, members } = useOnlineMembersStore();
 
   const [message, setMessage] = useState("");
   const [replyTarget, setReplyTarget] = useState<Chat | null>(null);
-  const [showMembers, setShowMembers] = useState(false);
-  const [showMenu, setShowMenu] = useState(false);
-  const [showEdit, setShowEdit] = useState(false);
-  const [editName, setEditName] = useState("");
-  const [showAddMembers, setShowAddMembers] = useState(false);
-  const [memberKeyword, setMemberKeyword] = useState("");
-  const debouncedMemberKeyword = useDebouncedValue(memberKeyword, 400);
-  const [selectedMembers, setSelectedMembers] = useState<
-    Array<{ _id: string; nama: string; email: string }>
-  >([]);
-  const [selectedMemberValue, setSelectedMemberValue] = useState("");
-  const [showExitConfirm, setShowExitConfirm] = useState(false);
 
-  const menuRef = useRef<HTMLDivElement | null>(null);
   const chatContainerRef = useRef<HTMLDivElement | null>(null);
   const messageInputRef = useRef<HTMLInputElement | null>(null);
   const listSentinelRef = useRef<HTMLDivElement | null>(null);
@@ -113,15 +85,8 @@ export default function ChatRoomPanel({ onExitRoom, roomDetailData }: Props) {
   const { mutate: addChat, isPending: isAddChatPending } = useAddChatMutation(roomId);
   const { mutate: deleteChat } = useDeleteChatMutation();
   const { mutate: markRoomSeen } = useSeenRoomMutation(roomId);
-  const { mutate: addMembersToRoom, isPending: isAddMembersPending } =
-    useAddMembersToRoomMutation();
+  const { mutate: logoutMutation, isPending: isLogoutPending } = useLogoutMutation();
   const { data: profileData } = useMyProfileQuery();
-  const { mutate: exitRoom, isPending: isExitPending } = useExitRoomMutation();
-  const { mutate: updateRoomName, isPending: isUpdatePending } = useUpdateRoomMutation();
-  const { data: searchUsersData, isPending: isSearchUsersPending } = useRoomMemberCandidatesQuery(
-    roomId,
-    debouncedMemberKeyword,
-  );
 
   useEffect(() => {
     if (chatsData) fetchRoomChatsPage(roomId, chatsData);
@@ -231,14 +196,6 @@ export default function ChatRoomPanel({ onExitRoom, roomDetailData }: Props) {
     return "Offline";
   }, [getLastSeenById, isOnlineById, profileData?.timezone, roomDetailData, user?.id, members]);
 
-  const memberOptions = useMemo<SelectOption[]>(() => {
-    return (searchUsersData ?? []).map((nextUser) => ({
-      label: nextUser.nama,
-      value: nextUser.email,
-      meta: nextUser.email,
-    }));
-  }, [searchUsersData]);
-
   useEffect(() => {
     const container = chatContainerRef.current;
     if (!container) return;
@@ -261,17 +218,6 @@ export default function ChatRoomPanel({ onExitRoom, roomDetailData }: Props) {
     if (!shouldAutoScrollRef.current) return;
     container.scrollTop = container.scrollHeight;
   }, [roomId, chats.length]);
-
-  useEffect(() => {
-    const onClickOutside = (event: MouseEvent) => {
-      if (!menuRef.current) return;
-      if (event.target instanceof Node && menuRef.current.contains(event.target)) return;
-      setShowMenu(false);
-    };
-
-    if (showMenu) window.addEventListener("mousedown", onClickOutside);
-    return () => window.removeEventListener("mousedown", onClickOutside);
-  }, [showMenu]);
 
   useEffect(() => {
     const node = listSentinelRef.current;
@@ -327,10 +273,27 @@ export default function ChatRoomPanel({ onExitRoom, roomDetailData }: Props) {
   };
 
   const handleReply = (nextReplyTarget: Chat) => {
-    setReplyTarget(nextReplyTarget);
+    setReplyTarget({
+      ...nextReplyTarget,
+      pengirim: {
+        ...nextReplyTarget.pengirim,
+        nama: nextReplyTarget.pengirim.nama === user?.nama ? "You" : nextReplyTarget.pengirim.nama,
+      },
+    });
     window.setTimeout(() => {
       messageInputRef.current?.focus();
     }, 0);
+  };
+
+  const handleLogout = async () => {
+    logoutMutation(null, {
+      onSuccess: () => {
+        setUser(null);
+        setTimeout(() => {
+          window.location.reload();
+        }, 10);
+      },
+    });
   };
 
   const typingNames = roomDetailData.typing.filter((name) => name !== user?.nama);
@@ -345,57 +308,74 @@ export default function ChatRoomPanel({ onExitRoom, roomDetailData }: Props) {
     <>
       <div className="px-4 py-3 border-b border-white/10 flex items-center justify-between gap-2">
         <div>
+          {!user?.isOwner && <p className="text-[10px] opacity-50">You're {user?.nama}</p>}
           <p className="font-semibold">{roomDisplayName}</p>
-          {roomSubtitle}
+          <p
+            className={`text-[10px] ${roomSubtitle === "Online" ? "font-semibold text-cyan-300" : "opacity-70"}`}
+          >
+            {roomSubtitle}
+          </p>
         </div>
         <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={() => {
-              if (onExitRoom) {
-                onExitRoom();
-                return;
-              }
-            }}
-            className="md:hidden p-1 rounded border border-white/20"
-            aria-label="Back to rooms"
-          >
-            <ArrowLeft className="h-3.5 w-3.5" />
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setShowExitConfirm(true);
-              setShowMenu(false);
-            }}
-            disabled={isExitPending}
-            className="p-1 rounded border border-white/20"
+          {user?.isOwner && (
+            <button
+              type="button"
+              onClick={() => {
+                if (onExitRoom) {
+                  onExitRoom();
+                  return;
+                }
+              }}
+              className="md:hidden p-1 rounded border border-white/20"
+              aria-label="Back to rooms"
+            >
+              <ArrowLeft className="h-3.5 w-3.5" />
+            </button>
+          )}
+          <div
+            className="py-1 px-2 rounded border border-white/20"
             aria-label="Logout chat"
             title="Logout chat"
+            onClick={handleLogout}
           >
-            <LogOut className="h-3.5 w-3.5" />
-          </button>
-        </div>
-      </div>
-      <div ref={chatContainerRef} className="flex-1 overflow-y-auto px-3 py-3">
-        {chats.length > 0 && chats.length < totalChats && (
-          <div ref={listSentinelRef} className="py-2">
-            {isChatsPending && roomDetailData.page > 1 && (
-              <p className="text-xs text-slate-300">Loading more chats...</p>
+            {isLogoutPending ? (
+              <p className="text-[9px] opacity-70">Logging out..</p>
+            ) : (
+              <LogOut className="h-3.5 w-3.5" />
             )}
           </div>
+        </div>
+      </div>
+      <div ref={chatContainerRef} className="flex-1 overflow-y-auto px-3 py-3 space-y-1">
+        {chats.length > 0 ? (
+          <>
+            {chats.length < totalChats && (
+              <div ref={listSentinelRef} className="py-2">
+                {isChatsPending && roomDetailData.page > 1 && (
+                  <p className="text-xs text-slate-300">Loading more chats...</p>
+                )}
+              </div>
+            )}
+            {chats.map((chat) => (
+              <BubbleChat
+                key={chat._id}
+                chat={chat}
+                isMine={chat.pengirim._id === user?.id}
+                currentUserName={user?.nama}
+                timeZone={profileData?.timezone}
+                onReply={handleReply}
+                onDelete={handleDelete}
+              />
+            ))}
+          </>
+        ) : (
+          <div className="h-full flex items-center justify-center flex-col gap-3 opacity-70 p-10">
+            <MessagesSquare className="size-15" />
+            <p className="text-[11px] text-center">
+              Let's have a fun conversation with {roomDisplayName}!
+            </p>
+          </div>
         )}
-        {chats.map((chat) => (
-          <BubbleChat
-            key={chat._id}
-            chat={chat}
-            isMine={chat.pengirim._id === user?.id}
-            currentUserName={user?.nama}
-            timeZone={profileData?.timezone}
-            onReply={handleReply}
-            onDelete={handleDelete}
-          />
-        ))}
       </div>
       <div
         className={`px-4 text-[11px] text-slate-200 transition-all ${typingLabel ? "max-h-6 py-1" : "max-h-0 py-0"}`}
@@ -405,25 +385,25 @@ export default function ChatRoomPanel({ onExitRoom, roomDetailData }: Props) {
 
       <form onSubmit={handleSubmit} className="border-t border-white/10 p-2">
         {replyTarget && (
-          <button
-            type="button"
+          <div
             onClick={() => setReplyTarget(null)}
-            className="mb-2 w-full rounded-lg border border-white/10 px-2 py-1 text-left"
+            className="mb-2 w-full rounded-lg border border-white/10 px-3 py-2 text-left"
           >
-            <p className="text-[10px] text-pink-300">Reply to {replyTarget.pengirim.nama}</p>
+            <p className="text-[10px] text-pink-300 mb-1">Reply to {replyTarget.pengirim.nama}</p>
             <p className="text-xs line-clamp-1">{replyTarget.pesan}</p>
             <p className="mt-1 text-[10px] text-slate-400">Tap to remove</p>
-          </button>
+          </div>
         )}
         <div className="flex items-center gap-2">
           <input
+            spellCheck={false}
             value={message}
             ref={messageInputRef}
             onChange={(e) => setMessage(e.target.value)}
             placeholder="Write a message"
             className="flex-1 rounded-lg border border-white/10 px-3 py-2 text-sm focus:outline-none"
           />
-          <button type="submit" className="rounded-lg p-2 btn glass">
+          <button type="submit" className="rounded-lg p-2 btn glass" disabled={isAddChatPending}>
             <Send className="h-4 w-4" />
           </button>
         </div>

@@ -18,12 +18,16 @@ const queryClient = new QueryClient({
 });
 
 export function ChatAppCore() {
-  const { user } = useAuthStore();
+  const { user, hydrated, hydrateFromStorage } = useAuthStore();
   const { handleRealtimePayload, rooms, hydrateRoomsPage } = useRoomsMainStore();
   const { connect, disconnect, sendOnline, subscribe, unsubscribe } = useWsStore();
 
   const roomIdsKey = rooms.map((room) => room._id).join("|");
   const roomIds = useMemo(() => rooms.map((room) => room._id), [roomIdsKey]);
+
+  useEffect(() => {
+    hydrateFromStorage();
+  }, [hydrateFromStorage]);
 
   useEffect(() => {
     if (!user?.id) {
@@ -69,7 +73,7 @@ export function ChatAppCore() {
     return () => unsubscribe(userChannel, handler);
   }, [hydrateRoomsPage, subscribe, unsubscribe, user?.id]);
 
-  if (!user) return <ChatAppNoLogin />;
+  if (!hydrated || !user) return <ChatAppNoLogin />;
   return <RoomsPage />;
 }
 

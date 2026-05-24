@@ -34,17 +34,18 @@ export async function POST(req: Request) {
     return NextResponse.json(data, { status: response.status });
   }
 
-  const nextRes = NextResponse.json(
-    {
-      user: {
-        id: data.id,
-        email: data.email,
-        nama: data.nama,
-        timezone: data.timezone,
-      },
+  const responseJSON = {
+    user: {
+      id: data.data.id,
+      email: data.data.email,
+      nama: data.data.nama,
+      timezone: data.data.timezone,
     },
-    { status: 200 },
-  );
+    token: data.data.token,
+    isOwner: true,
+  };
+
+  const nextRes = NextResponse.json(responseJSON, { status: 200 });
   nextRes.cookies.set("token", data.token, {
     expires: new Date("9999-12-31T23:59:59.000Z"),
   });

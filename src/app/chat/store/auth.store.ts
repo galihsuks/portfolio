@@ -4,21 +4,38 @@ import { UserAuth } from "../types/domain";
 
 type AuthState = {
     user: UserAuth | null;
+    hydrated: boolean;
+    hydrateFromStorage: () => void;
     setUser: (user: UserAuth | null) => void;
     logout: () => void;
 };
 
-const persisted = localStorage.getItem("omong:user");
-
 export const useAuthStore = create<AuthState>((set) => ({
-    user: persisted ? (JSON.parse(persisted) as UserAuth) : null,
+    user: null,
+    hydrated: false,
+    hydrateFromStorage: () => {
+        if (typeof window === "undefined") {
+            set({ hydrated: true });
+            return;
+        }
+        const persisted = window.localStorage.getItem("omong:user");
+        set({
+            user: persisted ? (JSON.parse(persisted) as UserAuth) : null,
+            hydrated: true,
+        });
+    },
     setUser: (user) => {
-        if (user) localStorage.setItem("omong:user", JSON.stringify(user));
-        else localStorage.removeItem("omong:user");
+        if (typeof window !== "undefined") {
+            if (user)
+                window.localStorage.setItem("omong:user", JSON.stringify(user));
+            else window.localStorage.removeItem("omong:user");
+        }
         set({ user });
     },
     logout: () => {
-        localStorage.removeItem("omong:user");
+        if (typeof window !== "undefined") {
+            window.localStorage.removeItem("omong:user");
+        }
         set({ user: null });
     },
 }));
