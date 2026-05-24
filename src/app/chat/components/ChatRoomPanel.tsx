@@ -15,7 +15,7 @@ import {
 import { ROOM_CHAT_LIMIT } from "../config/constants";
 import { useMyProfileQuery } from "../hooks/useUser";
 import { formatShortDateTimeByTimeZone } from "../utils/dateTime";
-import { ArrowLeft, LogOut, MessagesSquare, Send } from "lucide-react";
+import { ArrowLeft, LoaderCircle, LogOut, MessagesSquare, Send } from "lucide-react";
 import BubbleChat, { ChatBubblePending } from "../../components/ChatAppBubble";
 import { useLogoutMutation } from "../hooks/useAuthMutation";
 
@@ -371,27 +371,40 @@ export default function ChatRoomPanel({ onExitRoom, roomDetailData }: Props) {
                 onDelete={handleDelete}
               />
             ))}
-            {isAddChatPending && (
-              <ChatBubblePending
-                timeZone={profileData?.timezone}
-                currentUserName={user?.nama}
-                pesan={message}
-                reply={
-                  replyTarget
-                    ? { pesan: replyTarget.pesan, namaPengirim: replyTarget.pengirim.nama }
-                    : null
-                }
-              />
-            )}
           </>
         ) : (
-          <div className="h-full flex items-center justify-center flex-col gap-3 opacity-70 p-10">
-            <MessagesSquare className="size-15" />
-            <p className="text-[11px] text-center">
-              {"Let's have a fun conversation with "}
-              {roomDisplayName}!
-            </p>
-          </div>
+          <>
+            {!isAddChatPending && (
+              <div className="h-full flex items-center justify-center flex-col gap-3 opacity-70 p-10">
+                {isChatsPending && roomDetailData.page === 1 ? (
+                  <>
+                    <LoaderCircle className="size-10 animate-spin" />
+                    <p className="text-[11px] text-center">Loading conversation..</p>
+                  </>
+                ) : (
+                  <>
+                    <MessagesSquare className="size-15" />
+                    <p className="text-[11px] text-center">
+                      {"Let's have a fun conversation with "}
+                      {roomDisplayName}!
+                    </p>
+                  </>
+                )}
+              </div>
+            )}
+          </>
+        )}
+        {isAddChatPending && (
+          <ChatBubblePending
+            timeZone={profileData?.timezone}
+            currentUserName={user?.nama}
+            pesan={message}
+            reply={
+              replyTarget
+                ? { pesan: replyTarget.pesan, namaPengirim: replyTarget.pengirim.nama }
+                : null
+            }
+          />
         )}
       </div>
       <div

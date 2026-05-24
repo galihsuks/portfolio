@@ -15,7 +15,7 @@ export default function ChatAppNoLogin() {
   const [loading, setLoading] = useState(false);
   const [nameDraft, setNameDraft] = useState("");
   const [botLines, setBotLines] = useState<BotLine[]>([]);
-  const { setUser } = useAuthStore();
+  const { setUser, setIsOpenChat, setLoginProcess } = useAuthStore();
   const messages = useMessages();
   const chatbot = messages.chatbot as {
     opening: string;
@@ -43,6 +43,8 @@ export default function ChatAppNoLogin() {
     isOwner?: boolean;
   }) {
     if (!payload.user?.id || !payload.token) return;
+    setIsOpenChat();
+    setLoginProcess(true);
     setUser({
       id: String(payload.user.id),
       email: String(payload.user.email ?? ""),

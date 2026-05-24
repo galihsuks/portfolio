@@ -18,7 +18,7 @@ const queryClient = new QueryClient({
 });
 
 export function ChatAppCore() {
-  const { user, hydrated, hydrateFromStorage } = useAuthStore();
+  const { user, hydrated, hydrateFromStorage, loginProcess } = useAuthStore();
   const { handleRealtimePayload, rooms, hydrateRoomsPage } = useRoomsMainStore();
   const { connect, disconnect, sendOnline, subscribe, unsubscribe } = useWsStore();
 
@@ -73,7 +73,7 @@ export function ChatAppCore() {
     return () => unsubscribe(userChannel, handler);
   }, [hydrateRoomsPage, subscribe, unsubscribe, user?.id]);
 
-  if (!hydrated || !user) return <ChatAppNoLogin />;
+  if (!hydrated || !user || loginProcess) return <ChatAppNoLogin />;
   return <RoomsPage />;
 }
 

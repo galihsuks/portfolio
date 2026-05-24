@@ -1,5 +1,5 @@
 "use client";
-import { Check, CheckCheck, ChevronUpIcon, MessageCircle } from "lucide-react";
+import { Check, CheckCheck, ChevronUpIcon, LoaderCircle, MessageCircle } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { formatTimeByTimeZone } from "../utils/dateTime";
 import { useAuthStore } from "../store/auth.store";
@@ -12,8 +12,8 @@ import ChatRoomPanel from "./ChatRoomPanel";
 
 export function RoomsPage() {
   /* eslint-disable react-hooks/exhaustive-deps */
-  const [open, setOpen] = useState(false);
-  const { user } = useAuthStore();
+  const { user, isOpenChat } = useAuthStore();
+  const [open, setOpen] = useState(isOpenChat());
   const { data: profileData } = useMyProfileQuery();
   const {
     totalRooms,
@@ -64,7 +64,7 @@ export function RoomsPage() {
 
   useEffect(() => {
     setIsOnlineById_Trigger((prev) => !prev);
-    console.log(isOnlineById_Trigger);
+    console.log(`Trigger online ${isOnlineById_Trigger}`);
   }, [membersOnline]);
 
   const isOwner = user?.isOwner ?? false;
@@ -78,6 +78,26 @@ export function RoomsPage() {
       if (privateWithOwner?._id) setActiveRoomId(privateWithOwner._id);
     }
   }, [user, rooms]);
+
+  if (isRoomsPending && page === 1) {
+    return (
+      <>
+        <div
+          onClick={() => setOpen((p) => !p)}
+          className={`cursor-pointer transition-all duration-400 fixed z-50 flex bottom-3 md:bottom-6 right-3 md:right-6 ${open ? "h-10 w-10 rotate-180" : "h-14 w-14"} glass items-center justify-center rounded-full backdrop-blur-xs`}
+        >
+          {open ? <ChevronUpIcon className="h-4 w-4" /> : <MessageCircle className="h-6 w-6" />}
+        </div>
+        <div
+          data-lenis-prevent
+          className={`transition-all duration-400 overflow-hidden fixed z-50 flex justify-center items-center flex-col gap-2 rounded-xl bg-black/70 border-white/10 backdrop-blur-lg md:bottom-20 md:right-6 bottom-16 right-3 ${open ? `h-[520px] w-[95%] border ${isOwner ? "md:w-[900px]" : "md:w-[350px]"}` : "h-[0px] w-[0px]"}`}
+        >
+          <LoaderCircle className="size-10 animate-spin" />
+          <p className="text-[11px] text-center">Loading rooms..</p>
+        </div>
+      </>
+    );
+  }
 
   return (
     <>

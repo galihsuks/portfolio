@@ -130,7 +130,7 @@ export async function POST(req: Request) {
   }
 
   const token = String(loginResult.data?.token ?? "");
-  if (token) {
+  if (token && shouldRegister) {
     await backendCreateRoom(token);
   }
 
