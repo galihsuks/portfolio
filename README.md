@@ -1,36 +1,83 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Portfolio Galih (Next.js)
 
-## Getting Started
+Portfolio website with integrated real-time chat module.
 
-First, run the development server:
+## Tech Stack
+
+- Next.js 15 (App Router)
+- React 19
+- TypeScript
+- Tailwind CSS v4
+- Zustand (global state)
+- TanStack Query (server state/cache)
+- WebSocket (real-time chat/presence)
+- next-intl (localization)
+- Lenis (smooth scrolling)
+
+## Run Locally
+
+1. Install dependencies:
+
+```bash
+npm install
+```
+
+2. Create `.env` file (or update existing):
+
+```env
+NEXT_PUBLIC_BACKEND_URL=http://localhost:5000
+NEXT_PUBLIC_WS=ws://localhost:8080
+NEXT_PUBLIC_FRONTEND_URL=http://localhost:3001
+NEXT_PUBLIC_URL_CV=
+
+CHAT_OWNER_CODE=*****
+CHAT_OWNER_EMAIL=*****
+CHAT_OWNER_PASSWORD=*****
+GENERATED_PASSWORD=*****
+```
+
+3. Start dev server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+App runs at `http://localhost:3001`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `npm run dev` - run development server on port `3001`
+- `npm run build` - production build
+- `npm run start` - run production server on port `3001`
+- `npm run lint` - run ESLint
 
-## Learn More
+## Chat Architecture (Summary)
 
-To learn more about Next.js, take a look at the following resources:
+- Entry component: `src/app/components/ChatApp.tsx`
+- Unauthenticated flow: `src/app/components/ChatAppNoLogin.tsx`
+- Auth state: `src/app/chat/store/auth.store.ts`
+- Rooms state + realtime reducer: `src/app/chat/store/roomsMain.store.ts`
+- WebSocket client: `src/app/chat/store/ws.store.ts`
+- Online members state: `src/app/chat/store/onlineMembers.store.ts`
+- Query hooks:
+  - Rooms: `src/app/chat/hooks/useRooms.ts`
+  - Chats: `src/app/chat/hooks/useChatMutations.ts`
+  - User: `src/app/chat/hooks/useUser.ts`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Pre-auth Flow
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Guest opens chat -> bot asks visitor name.
+- If input matches owner code -> `/api/chat/owner-login` -> login as owner.
+- Otherwise -> `/api/chat/preauth`:
+  - detect known visitor (optional confirm),
+  - register new guest if needed,
+  - login guest,
+  - continue to chat.
 
-## Deploy on Vercel
+### 401 Handling
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Global API client (`src/app/_services/api/client.ts`) handles `401` by:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- clearing auth store,
+- preventing reload loop with session guard,
+- hard reloading page.
