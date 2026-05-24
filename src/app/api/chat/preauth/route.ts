@@ -37,12 +37,6 @@ async function backendLogin(email: string, sandi: string) {
 }
 
 async function backendSignup(email: string, sandi: string, nama: string) {
-  console.log("ini di fnc backend signup");
-  console.log({
-    email,
-    sandi,
-    nama,
-  });
   const response = await fetch(`${backendURL}/auth/signup`, {
     method: "POST",
     headers: {
@@ -56,7 +50,7 @@ async function backendSignup(email: string, sandi: string, nama: string) {
 }
 
 async function backendCreateRoom(token: string) {
-  await fetch(`${backendURL}/room`, {
+  const response = await fetch(`${backendURL}/room`, {
     method: "POST",
     headers: {
       Accept: "application/json",
@@ -64,7 +58,12 @@ async function backendCreateRoom(token: string) {
       Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({ tipe: "private", anggota: [OWNER_EMAIL] }),
-  }).catch(() => undefined);
+  });
+  const data = await response.json();
+  return {
+    status: response.status,
+    message: data.message,
+  };
 }
 
 async function tryFindUserByName(nama: string) {
@@ -131,7 +130,10 @@ export async function POST(req: Request) {
 
   const token = String(loginResult.data?.token ?? "");
   if (token && shouldRegister) {
-    await backendCreateRoom(token);
+    const resCreateRoom = await backendCreateRoom(token);
+    if (resCreateRoom.status !== 200) {
+      return NextResponse.json(resCreateRoom.message, { status: resCreateRoom.status });
+    }
   }
 
   return NextResponse.json(

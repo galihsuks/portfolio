@@ -1,7 +1,7 @@
 "use client";
 
-import { ChevronUpIcon, MessageCircle } from "lucide-react";
-import { FormEvent, useMemo, useState } from "react";
+import { ChevronUpIcon, MessageCircle, Send } from "lucide-react";
+import { FormEvent, useMemo, useRef, useState } from "react";
 import { useMessages } from "next-intl";
 import { useAuthStore } from "../chat/store/auth.store";
 import { OWNER_CODE } from "../chat/config/constants";
@@ -11,6 +11,7 @@ type BotLine = { id: string; mine: boolean; text: string };
 export default function ChatAppNoLogin() {
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
+  const inputConfirm = useRef("");
   const [step, setStep] = useState<"ask-name" | "confirm-known">("ask-name");
   const [loading, setLoading] = useState(false);
   const [nameDraft, setNameDraft] = useState("");
@@ -43,7 +44,7 @@ export default function ChatAppNoLogin() {
     isOwner?: boolean;
   }) {
     if (!payload.user?.id || !payload.token) return;
-    setIsOpenChat();
+    setIsOpenChat(true);
     setLoginProcess(true);
     setUser({
       id: String(payload.user.id),
@@ -57,9 +58,9 @@ export default function ChatAppNoLogin() {
     }, 10);
   }
 
-  const handleSubmit = async (event: FormEvent) => {
-    event.preventDefault();
-    const text = input.trim();
+  const handleSubmit = async (event?: FormEvent) => {
+    event?.preventDefault();
+    const text = input ? input.trim() : inputConfirm.current;
     if (!text || loading) return;
     pushMe(text);
     setInput("");
@@ -156,7 +157,7 @@ export default function ChatAppNoLogin() {
                 key={line.id}
                 className={`mb-2 flex ${line.mine ? "justify-end" : "justify-start"}`}
               >
-                <div className="max-w-[75%] rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm">
+                <div className="max-w-[75%] rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs">
                   {line.text}
                 </div>
               </div>
@@ -166,13 +167,43 @@ export default function ChatAppNoLogin() {
             )}
           </div>
           <form onSubmit={handleSubmit} className="border-t border-white/10 p-2">
-            <input
-              spellCheck={false}
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder={isEn ? "Type your answer..." : "Tulis jawaban kamu..."}
-              className="w-full rounded-lg border border-white/10 px-3 py-2 text-sm focus:outline-none bg-transparent"
-            />
+            <div className="flex items-center gap-2">
+              {step === "confirm-known" ? (
+                <div className="flex-1 flex items-center gap-2 text-center">
+                  <span
+                    className="rounded-full p-2 btn glass flex-1"
+                    onClick={() => {
+                      inputConfirm.current = "ya";
+                      handleSubmit();
+                    }}
+                  >
+                    {isEn ? "Yes" : "Ya"}
+                  </span>
+                  <span
+                    className="rounded-full p-2 btn glass flex-1"
+                    onClick={() => {
+                      inputConfirm.current = "no";
+                      handleSubmit();
+                    }}
+                  >
+                    {isEn ? "No" : "Belum"}
+                  </span>
+                </div>
+              ) : (
+                <>
+                  <input
+                    spellCheck={false}
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    placeholder={isEn ? "Type your answer..." : "Tulis jawaban kamu..."}
+                    className="flex-1 rounded-lg border border-white/10 px-3 py-2 text-sm focus:outline-none"
+                  />
+                  <button type="submit" className="rounded-lg p-2 btn glass" disabled={loading}>
+                    <Send className="h-4 w-4" />
+                  </button>
+                </>
+              )}
+            </div>
           </form>
         </section>
       </div>

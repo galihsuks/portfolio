@@ -1,5 +1,12 @@
 "use client";
-import { Check, CheckCheck, ChevronUpIcon, LoaderCircle, MessageCircle } from "lucide-react";
+import {
+  Check,
+  CheckCheck,
+  ChevronUpIcon,
+  LoaderCircle,
+  MessageCircle,
+  TriangleAlert,
+} from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { formatTimeByTimeZone } from "../utils/dateTime";
 import { useAuthStore } from "../store/auth.store";
@@ -12,8 +19,8 @@ import ChatRoomPanel from "./ChatRoomPanel";
 
 export function RoomsPage() {
   /* eslint-disable react-hooks/exhaustive-deps */
-  const { user, isOpenChat } = useAuthStore();
-  const [open, setOpen] = useState(isOpenChat());
+  const { user, isOpenChat, setIsOpenChat } = useAuthStore();
+  const [open, setOpen] = useState(isOpenChat);
   const { data: profileData } = useMyProfileQuery();
   const {
     totalRooms,
@@ -35,9 +42,19 @@ export function RoomsPage() {
   );
 
   const [isOnlineById_Trigger, setIsOnlineById_Trigger] = useState(false);
+  const [needReload, setNeedReload] = useState(false);
 
   useEffect(() => {
-    if (roomsData) fetchNextRooms(roomsData);
+    setIsOpenChat(false);
+  }, []);
+
+  useEffect(() => {
+    if (roomsData) {
+      if (roomsData.totalRooms === 0) {
+        setNeedReload(true);
+      }
+      fetchNextRooms(roomsData);
+    }
   }, [roomsData]);
 
   useEffect(() => {
@@ -79,6 +96,16 @@ export function RoomsPage() {
     }
   }, [user, rooms]);
 
+  useEffect(() => {
+    if (needReload) {
+      console.log("need reload");
+      setIsOpenChat(true);
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+    }
+  }, [needReload]);
+
   if (isRoomsPending && page === 1) {
     return (
       <>
@@ -94,6 +121,28 @@ export function RoomsPage() {
         >
           <LoaderCircle className="size-10 animate-spin" />
           <p className="text-[11px] text-center">Loading rooms..</p>
+        </div>
+      </>
+    );
+  }
+
+  if (needReload) {
+    return (
+      <>
+        <div
+          onClick={() => setOpen((p) => !p)}
+          className={`cursor-pointer transition-all duration-400 fixed z-50 flex bottom-3 md:bottom-6 right-3 md:right-6 ${open ? "h-10 w-10 rotate-180" : "h-14 w-14"} glass items-center justify-center rounded-full backdrop-blur-xs`}
+        >
+          {open ? <ChevronUpIcon className="h-4 w-4" /> : <MessageCircle className="h-6 w-6" />}
+        </div>
+        <div
+          data-lenis-prevent
+          className={`transition-all duration-400 overflow-hidden fixed z-50 flex justify-center items-center flex-col gap-2 rounded-xl bg-black/70 border-white/10 backdrop-blur-lg md:bottom-20 md:right-6 bottom-16 right-3 ${open ? `h-[520px] w-[95%] border ${isOwner ? "md:w-[900px]" : "md:w-[350px]"}` : "h-[0px] w-[0px]"}`}
+        >
+          <TriangleAlert className="size-10" />
+          <p className="text-[11px] text-center">
+            I will try to get the rooms again after 1 second..
+          </p>
         </div>
       </>
     );

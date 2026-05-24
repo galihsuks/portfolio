@@ -8,8 +8,8 @@ type AuthState = {
   hydrateFromStorage: () => void;
   setUser: (user: UserAuth | null) => void;
   logout: () => void;
-  isOpenChat: () => boolean;
-  setIsOpenChat: () => void;
+  isOpenChat: boolean;
+  setIsOpenChat: (value: boolean) => void;
   loginProcess: boolean;
   setLoginProcess: (value: boolean) => void;
 };
@@ -41,18 +41,16 @@ export const useAuthStore = create<AuthState>((set) => ({
     }
     set({ user: null });
   },
-  isOpenChat: () => {
-    let openChat = false;
+  isOpenChat:
+    typeof window !== "undefined"
+      ? Boolean(window.localStorage.getItem("portfolio:open-chat"))
+      : false,
+  setIsOpenChat: (value) => {
     if (typeof window !== "undefined") {
-      openChat = Boolean(window.localStorage.getItem("portfolio:open-chat"));
-      window.localStorage.removeItem("portfolio:open-chat");
+      if (value) window.localStorage.setItem("portfolio:open-chat", "1");
+      else window.localStorage.removeItem("portfolio:open-chat");
     }
-    return openChat;
-  },
-  setIsOpenChat: () => {
-    if (typeof window !== "undefined") {
-      window.localStorage.setItem("portfolio:open-chat", "1");
-    }
+    set({ isOpenChat: value });
   },
   loginProcess: false,
   setLoginProcess: (value) => {
